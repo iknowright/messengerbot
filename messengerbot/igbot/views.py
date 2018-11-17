@@ -23,6 +23,19 @@ class IgBotView(generic.View):
         return generic.View.dispatch(self, request, *args, **kwargs)
             
     def post(self, request, *args, **kwargs):
-        incoming_message = json.loads(self.request.body.decode('utf-8'))
-        print (incoming_message)
-        return HttpResponse()
+        body = json.loads(self.request.body.decode('utf-8'))
+        # print (body)
+        if body['object'] == 'page': 
+            for entry in body['entry']:
+                # Get the webhook event. entry.messaging is an array, but 
+                # will only ever contain one event, so we get index 0
+                webhook_event = entry['messaging'][0]
+                print(webhook_event)
+                sender_id = webhook_event['sender']['id']
+                message = webhook_event['message']
+            return HttpResponse(status=200)
+        else :
+            return HttpResponse(status=404)
+def processMessage(message):
+    pass
+    return
