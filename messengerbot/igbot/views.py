@@ -7,6 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
 
+# handle messages event
+
+
 # Create your views here.
 
 class IgBotView(generic.View):
@@ -36,6 +39,3 @@ class IgBotView(generic.View):
             return HttpResponse(status=200)
         else :
             return HttpResponse(status=404)
-def processMessage(message):
-    pass
-    return
