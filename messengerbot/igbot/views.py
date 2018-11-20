@@ -8,75 +8,37 @@ from django.utils.decorators import method_decorator
 import json
 import requests
 
+from igbot.messageAPI import MessageAPI
+
+
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
 # Handle messages events
 def handleMessage(sender_psid, received_message):
+    sender = MessageAPI(sender_psid)
+
     # Check if the message contains text
     if received_message.get('text'):
         # Create the payload for a basic text message
-        response = {
-            "text": "You sent the message: "+received_message["text"]+". Now send me an image!"
-        }
-        # Sends the response message
-        callSendAPI(sender_psid, response)
+        sender.text_message(received_message['text'])
         return
-    # elif received_message.get('attachments'):
-    #     # Get the URL of the message attachment
-    #     attachment_url = received_message['attachments'][0]['payload']['url']
-    #     response = {
-    #         "attachment": {
-    #             "type": "template",
-    #             "payload": {
-    #                 "template_type": "generic",
-    #                 "elements": [{
-    #                     "title": "Is this the right picture?",
-    #                     "subtitle": "Tap a button to answer.",
-    #                     "image_url": attachment_url,
-    #                     "buttons": [
-    #                         {
-    #                             "type": "postback",
-    #                             "title": "Yes!",
-    #                             "payload": "yes",
-    #                         },
-    #                         {
-    #                             "type": "postback",
-    #                             "title": "No!",
-    #                             "payload": "no",
-    #                         }
-    #                     ],
-    #                 }]
-    #             }
-    #         }
-    #     }
-    #     callSendAPI(sender_psid, response)
-    #     return
+    
     return
 
-# Handles messaging_postbacks events
-def handlePostback(sender_psid, received_postback):
-    # Get the payload for the postback
-    # payload = received_postback["payload"]
-    # if payload == "yes":
-    #     response = { "text": "Thanks!" }
-    # elif paylo == "no":
-    #     response = { "text": "No" }
-    # callSendAPI(sender_psid, response
-    pass
 
 # Sends response messages via the Send API
-def callSendAPI(sender_psid, response):
-    # Construct the message body
-    request_body = json.dumps({
-        'recipient': {
-        'id': sender_psid
-        },
-        'message': response
-    })
-    r = requests.post(post_url, headers={'Content-Type': 'application/json'}, data=request_body)
-    print("<-------------Start of Response------------->")
-    print(r.json())
-    print("<-------------End of Response------------->")
+# def callSendAPI(sender_psid, response):
+#     # Construct the message body
+#     request_body = json.dumps({
+#         'recipient': {
+#         'id': sender_psid
+#         },
+#         'message': response
+#     })
+#     r = requests.post(post_url, headers={'Content-Type': 'application/json'}, data=request_body)
+#     print("<-------------Start of Response------------->")
+#     print(r.json())
+#     print("<-------------End of Response------------->")
 
 
 # Create your views here.
