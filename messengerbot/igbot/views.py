@@ -19,11 +19,49 @@ def handleMessage(sender_psid, received_message):
             "text": "You sent the message: "+received_message["text"]+". Now send me an image!"
         }
         # Sends the response message
-        callSendAPI(sender_psid, response)    
+        callSendAPI(sender_psid, response)
+        return
+    # elif received_message.get('attachments'):
+    #     # Get the URL of the message attachment
+    #     attachment_url = received_message['attachments'][0]['payload']['url']
+    #     response = {
+    #         "attachment": {
+    #             "type": "template",
+    #             "payload": {
+    #                 "template_type": "generic",
+    #                 "elements": [{
+    #                     "title": "Is this the right picture?",
+    #                     "subtitle": "Tap a button to answer.",
+    #                     "image_url": attachment_url,
+    #                     "buttons": [
+    #                         {
+    #                             "type": "postback",
+    #                             "title": "Yes!",
+    #                             "payload": "yes",
+    #                         },
+    #                         {
+    #                             "type": "postback",
+    #                             "title": "No!",
+    #                             "payload": "no",
+    #                         }
+    #                     ],
+    #                 }]
+    #             }
+    #         }
+    #     }
+    #     callSendAPI(sender_psid, response)
+    #     return
     return
 
 # Handles messaging_postbacks events
 def handlePostback(sender_psid, received_postback):
+    # Get the payload for the postback
+    # payload = received_postback["payload"]
+    # if payload == "yes":
+    #     response = { "text": "Thanks!" }
+    # elif paylo == "no":
+    #     response = { "text": "No" }
+    # callSendAPI(sender_psid, response
     pass
 
 # Sends response messages via the Send API
@@ -82,8 +120,7 @@ class IgBotView(generic.View):
                     try:
                         handlePostback(sender_psid, webhook_event['message'])
                     except:
-                        return HttpResponse(status=404)
-                
+                        return HttpResponse(status=404) 
             return HttpResponse(status=200)
         else :
             return HttpResponse(status=404)
