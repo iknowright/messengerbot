@@ -13,7 +13,7 @@ post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCES
 # Handle messages events
 def handleMessage(sender_psid, received_message):
     # Check if the message contains text
-    if received_message['text']:
+    if received_message.get('text'):
         # Create the payload for a basic text message
         response = {
             "text": "You sent the message: "+received_message["text"]+". Now send me an image!"
@@ -29,7 +29,6 @@ def handlePostback(sender_psid, received_postback):
 # Sends response messages via the Send API
 def callSendAPI(sender_psid, response):
     # Construct the message body
-    print(response)
     request_body = json.dumps({
         'recipient': {
         'id': sender_psid
@@ -37,7 +36,9 @@ def callSendAPI(sender_psid, response):
         'message': response
     })
     r = requests.post(post_url, headers={'Content-Type': 'application/json'}, data=request_body)
+    print("<-------------Start of Response------------->")
     print(r.json())
+    print("<-------------End of Response------------->")
 
 
 # Create your views here.
@@ -65,14 +66,14 @@ class IgBotView(generic.View):
 
                 # Gets the body of the webhook event
                 webhook_event = entry['messaging'][0]
+                print("<-------------Start of Githook Content------------->")
                 print(webhook_event)
+                print("<-------------Start of Githook Content------------->")
 
                 # Get the sender PSID
                 sender_psid = webhook_event['sender']['id']
 
                 if webhook_event.get('message'):
-                    print(webhook_event['message'])
-                    print(sender_psid)
                     try:
                         handleMessage(sender_psid, webhook_event['message'])
                     except:
