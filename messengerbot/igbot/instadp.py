@@ -42,15 +42,8 @@ def fetchDP(userID):
         sys.exit()
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Download any users Instagram display picture/profile picture in full quality")
-
-    parser.add_argument('username', action="store", help="username of the Instagram user")
-
-    args = parser.parse_args()
-
-    username = args.username
+def getImageUrl(instagram_id):
+    username = instagram_id
 
     user_id = getID(username)
     file_url = fetchDP(user_id)
@@ -61,9 +54,7 @@ def main():
         n = requests.post("https://api.imgur.com/3/image", headers={"Authorization": "Bearer %s" % IMGUR_ACESS_TOKEN}, data={"image":r.content})
         response = n.json()
         print("\033[92m✔ Image save:\033[0m {}".format(response['data']['link']))
+        return response['data']['link']
     else:
         print("Cannot make connection to download image")
-
-
-if __name__ == "__main__":
-    main()
+        return ""
