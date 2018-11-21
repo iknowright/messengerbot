@@ -1,6 +1,7 @@
 from igbot.igbot_setting import *
 import requests
 import json
+from igbot.models import Instagrammer
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
 class MessageAPI:
@@ -55,3 +56,60 @@ class MessageAPI:
             }  
         })
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=response)
+
+    def quickreply_message(self, content):
+        request = json.dumps({
+            "recipient":{
+                "id":self.fb_id
+            },
+            "message":{
+                "text": "Here is a quick reply!",
+                "quick_replies":[
+                    {
+                        "content_type":"location"
+                    }
+                ]
+            }  
+        })
+        requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
+
+    def profileTemplates(self, num):
+        igs = Instagrammer.objects.all()[:num]
+        generic_template = []
+        for ig in igs:
+            generic_template.append({
+                "title":ig.id,
+                "image_url":ig.image_url,
+                # "subtitle":"",
+                "default_action": {
+                    "type": "web_url",
+                    "url": ig.url,
+                    "webview_height_ratio": "tall",
+                },
+                "buttons":[
+                    {
+                        "type":"web_url",
+                        "url":ig.url,
+                        "title":"View Website"
+                    }         
+                ]      
+            })
+        print(generic_template)
+        request = json.dumps({
+            "recipient":{
+            "id":self.fb_id
+            },
+            "message":{
+                "attachment":{
+                    "type":"template",
+                    "payload":{
+                        "template_type":"generic",
+                        "elements": generic_template          
+                    }
+                }
+            }
+        })
+        print(request)
+        n = requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
+        print ("n:" +n.json())
+        return

@@ -93,15 +93,15 @@ class IgBotView(generic.View):
         if body['object'] == 'page': 
             # Get the webhook event. entry.messaging is an array, but 
             # will only ever contain one event, so we get index 0
-            # print("\n\n<-------------Start of Githook Content------------->")
-            # print(entry)
-            # print("<-------------End of Githook Content------------->")
+            print("\n\n<-------------Start of Githook Content------------->")
+            print(body)
+            print("<-------------End of Githook Content------------->")
             entry = body['entry'][0]
             # Gets the body of the webhook event
             if entry.get('messaging'):
                 webhook_event = entry['messaging'][0]
                 # Get the sender PSID
-                sender_psid = webhook_event['sender']['id']
+                # sender_psid = webhook_event['sender']['id']
 
                 machine.advance(webhook_event)
 

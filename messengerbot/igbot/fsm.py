@@ -1,5 +1,6 @@
 from transitions.extensions import GraphMachine
 from igbot.messageAPI import MessageAPI
+from igbot.models import Instagrammer
 
 class TocMachine(GraphMachine):
 
@@ -11,18 +12,20 @@ class TocMachine(GraphMachine):
 
     def is_going_to_state1(self, event):
         print("Testing State 1")
-        if event.get("message"):
-            text = event['message']['text']
-            print("1text:" + text)
-            return text.lower() == 'go to state1'
+        # if event.get('message'):
+        #     if event['message'].get('text'):
+        #         text = event['message']['text']
+        #         print("text:" + text)
+        #         return text.lower() == 'go to state1'
         return False
 
     def is_going_to_state2(self, event):
         print("Testing State 2")       
-        if event.get("message"):
-            text = event['message']['text']
-            print("2text:" + text)
-            return text.lower() == 'go to state2'
+        # if event.get('message'):
+        #     if event['message'].get('text'):
+        #         text = event['message']['text']
+        #         print("text:" + text)
+        #         return text.lower() == 'go to state2'
         return False
 
     def on_enter_state1(self, event):
@@ -30,7 +33,8 @@ class TocMachine(GraphMachine):
 
         sender_id = event['sender']['id']
         api = MessageAPI(sender_id)
-        responese = api.text_message("I'm entering state1")
+        # responese = api.text_message("I'm entering state1")
+        api.profileTemplates(3)
         self.go_back()
 
     def on_exit_state1(self):
