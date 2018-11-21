@@ -50,8 +50,8 @@ def getImageUrl(instagram_id):
     if r.ok:
         n = requests.post("https://api.imgur.com/3/image", headers={"Authorization": "Bearer %s" % IMGUR_ACESS_TOKEN}, data={"image":r.content})
         response = n.json()
-        print("\033[92m✔ Image save:\033[0m {}".format(response['data']['link']))
-        print("biography: %s" % biography)
+        # print("\033[92m✔ Image save:\033[0m {}".format(response['data']['link']))
+        # print("biography: %s" % biography)
         return response['data']['link'], biography
     else:
         print("Cannot make connection to download image")
