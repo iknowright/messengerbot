@@ -9,9 +9,42 @@ import json
 import requests
 
 from igbot.messageAPI import MessageAPI
-
+from igbot.fsm import TocMachine
 
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
+
+machine = TocMachine(
+    states=[
+        'user',
+        'state1',
+        'state2'
+    ],
+    transitions=[
+        {
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'state1',
+            'conditions': 'is_going_to_state1'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'state2',
+            'conditions': 'is_going_to_state2'
+        },
+        {
+            'trigger': 'go_back',
+            'source': [
+                'state1',
+                'state2'
+            ],
+            'dest': 'user'
+        }
+    ],
+    initial='user',
+    auto_transitions=False,
+    show_conditions=True,
+)
 
 # Handle messages events
 def handleMessage(sender_psid, received_message):
@@ -80,7 +113,7 @@ class IgBotView(generic.View):
                         return HttpResponse(status=404)
                 elif webhook_event.get('postback'):
                     try:
-                        handlePostback(sender_psid, webhook_event['message'])
+                        handlePostback(sender_psid, webhook_event['postback'])
                     except:
                         return HttpResponse(status=404) 
             return HttpResponse(status=200)
