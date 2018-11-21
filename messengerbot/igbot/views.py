@@ -69,6 +69,12 @@ def handleMessage(sender_psid, received_message):
 
 # Create your views here.
 
+def show_fsm(self):
+    machine.get_graph().draw('fsm.png', prog='dot', format='png')
+    return static_file('fsm.png', root='./', mimetype='image/png')
+    return
+
+
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
     def get(self, request, *args, **kwargs):
@@ -98,6 +104,8 @@ class IgBotView(generic.View):
                     webhook_event = entry['messaging'][0]
                     # Get the sender PSID
                     sender_psid = webhook_event['sender']['id']
+
+                    machine.advance(webhook_event)
 
                     if webhook_event.get('message'):
                         try:
