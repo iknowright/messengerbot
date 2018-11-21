@@ -71,7 +71,6 @@ def handleMessage(sender_psid, received_message):
 
 def show_fsm(self):
     machine.get_graph().draw('fsm.png', prog='dot', format='png')
-    return static_file('fsm.png', root='./', mimetype='image/png')
     return
 
 
@@ -92,31 +91,30 @@ class IgBotView(generic.View):
         body = json.loads(self.request.body.decode('utf-8'))
         # print (body)
         if body['object'] == 'page': 
-            for entry in body['entry']:
-                # Get the webhook event. entry.messaging is an array, but 
-                # will only ever contain one event, so we get index 0
-                print("<-------------Start of Githook Content------------->")
-                print(entry)
-                print("<-------------End of Githook Content------------->")
+            # Get the webhook event. entry.messaging is an array, but 
+            # will only ever contain one event, so we get index 0
+            # print("\n\n<-------------Start of Githook Content------------->")
+            # print(entry)
+            # print("<-------------End of Githook Content------------->")
+            entry = body['entry'][0]
+            # Gets the body of the webhook event
+            if entry.get('messaging'):
+                webhook_event = entry['messaging'][0]
+                # Get the sender PSID
+                sender_psid = webhook_event['sender']['id']
 
-                # Gets the body of the webhook event
-                if entry.get('messaging'):
-                    webhook_event = entry['messaging'][0]
-                    # Get the sender PSID
-                    sender_psid = webhook_event['sender']['id']
+                machine.advance(webhook_event)
 
-                    machine.advance(webhook_event)
-
-                    if webhook_event.get('message'):
-                        try:
-                            handleMessage(sender_psid, webhook_event['message'])
-                        except:
-                            return HttpResponse()
-                    elif webhook_event.get('postback'):
-                        try:
-                            handlePostback(sender_psid, webhook_event['postback'])
-                        except:
-                            return HttpResponse()
+                # if webhook_event.get('message'):
+                #     try:
+                #         handleMessage(sender_psid, webhook_event['message'])
+                #     except:
+                #         return HttpResponse()
+                # elif webhook_event.get('postback'):
+                #     try:
+                #         handlePostback(sender_psid, webhook_event['postback'])
+                #     except:
+                #         return HttpResponse()
             return HttpResponse()
         else :
             return HttpResponse()
