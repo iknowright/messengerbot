@@ -106,3 +106,4 @@ db.sqlite3
 .vscode
 project_venv
 __pycache__/
+igbot_setting.py
