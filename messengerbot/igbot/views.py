@@ -10,6 +10,10 @@ import requests
 
 from igbot.messageAPI import MessageAPI
 from igbot.fsm import TocMachine
+from igbot.models import Instagrammer
+from igbot.serializers import InstagrammerSerializer
+
+from rest_framework import viewsets
 
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
@@ -108,3 +112,7 @@ class IgBotView(generic.View):
             return HttpResponse()
         else :
             return HttpResponse()
+
+class InstagrammerViewSet(viewsets.ModelViewSet):
+    queryset = Instagrammer.objects.all()
+    serializer_class = InstagrammerSerializer
