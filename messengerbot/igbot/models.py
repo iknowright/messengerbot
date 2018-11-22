@@ -17,5 +17,8 @@ class Instagrammer(models.Model):
     url = models.URLField(blank=True)
     # 大頭照
     image_url = models.URLField(default="")
+
+    # 人氣
+    likes = models.IntegerField(default=0)
     class Meta:
         db_table = "instagrammer"

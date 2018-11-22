@@ -97,11 +97,6 @@ class MessageAPI:
                         "title": "Like",
                         "payload": "Like %s"%ig.id,
                     },
-                    {
-                        "type": "element-share",
-                        "title": "Like",
-                        "payload": "Like %s"%ig.id,
-                    },
                 ]      
             })
         print(generic_template)
