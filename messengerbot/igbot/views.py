@@ -22,7 +22,7 @@ machine = TocMachine(
         'user',
         'intro',
         'instadp',
-        'instadp_input'
+        'instadpinput'
     ],
     transitions=[
         {
@@ -40,7 +40,7 @@ machine = TocMachine(
         {
             'trigger': 'instadp_next',
             'source': 'instadp',
-            'dest': 'instadp_input',
+            'dest': 'instadpinput',
             'conditions': 'press_start'
         },
         {
@@ -77,10 +77,11 @@ def handleMessage(event):
 
 # Handle State Trigger
 def handleTrigger(state, send_id, text):
+    print("Server Handling State : %s" % state)
     if state == "user":
         machine.advance(send_id, text)
     if state == "instadp":
-        machine.instadp(send_id, text)
+        machine.instadp_next(send_id, text)
     
 
 # Create your views here.

@@ -22,9 +22,13 @@ class TocMachine(GraphMachine):
         return text == "go to intro"
 
     def press_start(self, sender_id, text):
+        print("Testing Instadp_input")
+        print(text)
+        
         return text == "開始"
 
     def press_return(self, sender_id, text):
+        print("Testing Instadp_input")
         return text == "返回"
 
     # state2
@@ -36,28 +40,15 @@ class TocMachine(GraphMachine):
         api.quickreply_message()
         self.go_back()
 
-    def on_exit_intro(self):
+    def on_exit_intro(self, sender_id, text):
         print('Leaving intro')
-
-    # state2
-    def on_enter_state2(self, sender_id, text):
-        print("I'm entering state2")
-        api = MessageAPI(sender_id)
-        responese = api.text_message("I'm entering state2")
-        self.go_back()
-
-    def on_exit_state2(self):
-        print('Leaving state2')
 
     # instadp
     def on_enter_instadp(self, sender_id, text):
         api = MessageAPI(sender_id)
         api.quickreply_message(messages['instadp_intro'], messages['instadp_intro_quickreply'])
 
-    def on_exit_instadp(self):
-        print('Leaving instadp')
-
-    # instadp_intro
-    def on_enter_instadp_intro(self, sender_id, text):
+    # instadp_input
+    def on_enter_instadpinput(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.text_message("hi u are in instadp_intro")
+        api.text_message("hi u are in instadpinput")
