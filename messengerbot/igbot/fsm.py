@@ -52,5 +52,6 @@ class TocMachine(GraphMachine):
     # instadp
     def on_enter_instadp(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.text_message(messages['instadp_intro'])
+        api.quickreply_message(messages['instadp_intro'], messages['instadp_intro_quickreply'])
+        print(self.state)
         self.go_back()

@@ -70,6 +70,12 @@ def handleMessage(event):
             text = event['postback']['payload']
     return text
 
+# Handle State Trigger
+def handleTrigger(state, send_id, text):
+    if state == "user":
+        machine.advance(send_id, text)
+    
+
 # Create your views here.
 def show_fsm(self):
     machine.get_graph().draw('fsm.png', prog='dot', format='png')
@@ -102,10 +108,9 @@ class IgBotView(generic.View):
             if entry.get('messaging'):
                 webhook_event = entry['messaging'][0]
                 text = handleMessage(webhook_event)
-                print(text)
                 sender_id = webhook_event['sender']['id']
-                print(sender_id)
-                machine.advance(sender_id, text)
+
+                handleTrigger(machine.state, sender_id, text)
             return HttpResponse()
         else :
             return HttpResponse()
