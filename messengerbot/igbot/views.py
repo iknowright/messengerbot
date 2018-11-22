@@ -22,26 +22,39 @@ machine = TocMachine(
         'user',
         'intro',
         'state2',
-        'instadp'
+        'instadp',
+        'instadp_input'
     ],
     transitions=[
         {
             'trigger': 'advance',
             'source': 'user',
             'dest': 'intro',
-            'conditions': 'is_going_to_intro'
+            'conditions': 'say_intro'
         },
         {
             'trigger': 'advance',
             'source': 'user',
             'dest': 'instadp',
-            'conditions': 'is_going_to_instadp'
+            'conditions': 'say_instadp'
         },
         {
             'trigger': 'advance',
             'source': 'user',
             'dest': 'state2',
             'conditions': 'is_going_to_state2'
+        },
+        {
+            'trigger': 'instadp_next',
+            'source': 'instadp',
+            'dest': 'instadp_input',
+            'conditions': 'press_start'
+        },
+        {
+            'trigger': 'instadp_next',
+            'source': 'instadp',
+            'dest': 'intro',
+            'conditions': 'press_intro'
         },
         {
             'trigger': 'go_back',
@@ -79,7 +92,7 @@ def handleTrigger(state, send_id, text):
 # Create your views here.
 def show_fsm(self):
     machine.get_graph().draw('fsm.png', prog='dot', format='png')
-    return
+    return HttpResponse()
 
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 

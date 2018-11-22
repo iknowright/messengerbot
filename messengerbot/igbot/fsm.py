@@ -11,13 +11,13 @@ class TocMachine(GraphMachine):
         )
 
     # advance[]
-    def is_going_to_instadp(self, sender_id, text):
+    def say_instadp(self, sender_id, text):
         print("Testing Instadp")
         # return False
         return text == "instadp"
 
 
-    def is_going_to_intro(self, sender_id, text):
+    def say_intro(self, sender_id, text):
         print("Testing State 1")
         # return False
         return text == "go to intro"
@@ -53,5 +53,4 @@ class TocMachine(GraphMachine):
     def on_enter_instadp(self, sender_id, text):
         api = MessageAPI(sender_id)
         api.quickreply_message(messages['instadp_intro'], messages['instadp_intro_quickreply'])
-        print(self.state)
-        self.go_back()
+        # self.go_back()
