@@ -109,7 +109,4 @@ class MessageAPI:
                 }
             }
         })
-        print(request)
-        n = requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
-        print ("n:" +n.json())
-        return
+        requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
