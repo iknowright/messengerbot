@@ -41,7 +41,7 @@ class MessageAPI:
         response_msg = json.dumps({"recipient": {"id": self.fb_id}, "message": response})
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=response_msg)
 
-    def quickreply_message(self):
+    def quickreply_message(self, content):
         response = json.dumps({
             "recipient":{
                 "id":self.fb_id
@@ -49,9 +49,6 @@ class MessageAPI:
             "message":{
                 "text": "What u gonna do!",
                 "quick_replies":[
-                    {
-                        "content_type":"location"
-                    },
                     {
                         "content_type":"text",
                         "title":"看正妹",

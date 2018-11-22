@@ -1,7 +1,7 @@
 from transitions.extensions import GraphMachine
 from igbot.messageAPI import MessageAPI
 from igbot.models import Instagrammer
-
+from igbot.messages import *
 class TocMachine(GraphMachine):
 
     def __init__(self, **machine_configs):
@@ -10,44 +10,47 @@ class TocMachine(GraphMachine):
             **machine_configs
         )
 
-    def is_going_to_state1(self, event):
+    # advance[]
+    def is_going_to_instadp(self, sender_id, text):
+        print("Testing Instadp")
+        # return False
+        return text == "instadp"
+
+
+    def is_going_to_intro(self, sender_id, text):
         print("Testing State 1")
-        if event.get('message'):
-            if event['message'].get('text'):
-                text = event['message']['text']
-                print("text:" + text)
-                return text.lower() == 'go to state1'
-        return False
+        # return False
+        return text == "go to intro"
 
-    def is_going_to_state2(self, event):
+    def is_going_to_state2(self, sender_id, text):
         print("Testing State 2")
-        if event.get('message'):   
-            if event['message'].get('text'):
-                text = event['message']['text']
-                print("text:" + text)
-                return text.lower() == 'go to state2'
-        return False
+        # return False        
+        return text == "go to intro"
 
-    def on_enter_state1(self, event):
-        print("I'm entering state1")
-
-        sender_id = event['sender']['id']
+    # state2
+    def on_enter_intro(self, sender_id, text):
+        print("I'm entering intro")
         api = MessageAPI(sender_id)
-        # api.text_message("I'm entering state1")
+        # api.text_message("I'm entering intro")
         # api.profileTemplates(10)
         api.quickreply_message()
         self.go_back()
 
-    def on_exit_state1(self):
-        print('Leaving state1')
+    def on_exit_intro(self):
+        print('Leaving intro')
 
-    def on_enter_state2(self, event):
+    # state2
+    def on_enter_state2(self, sender_id, text):
         print("I'm entering state2")
-
-        sender_id = event['sender']['id']
         api = MessageAPI(sender_id)
         responese = api.text_message("I'm entering state2")
         self.go_back()
 
     def on_exit_state2(self):
         print('Leaving state2')
+
+    # instadp
+    def on_enter_instadp(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        api.text_message(messages['instadp_intro'])
+        self.go_back()

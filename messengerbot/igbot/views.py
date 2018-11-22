@@ -20,15 +20,22 @@ post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCES
 machine = TocMachine(
     states=[
         'user',
-        'state1',
-        'state2'
+        'intro',
+        'state2',
+        'instadp'
     ],
     transitions=[
         {
             'trigger': 'advance',
             'source': 'user',
-            'dest': 'state1',
-            'conditions': 'is_going_to_state1'
+            'dest': 'intro',
+            'conditions': 'is_going_to_intro'
+        },
+        {
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'instadp',
+            'conditions': 'is_going_to_instadp'
         },
         {
             'trigger': 'advance',
@@ -39,8 +46,9 @@ machine = TocMachine(
         {
             'trigger': 'go_back',
             'source': [
-                'state1',
-                'state2'
+                'intro',
+                'state2',
+                'instadp'
             ],
             'dest': 'user'
         }
@@ -51,28 +59,21 @@ machine = TocMachine(
 )
 
 # Handle messages events
-def handleMessage(sender_psid, received_message):
-    sender = MessageAPI(sender_psid)
-
+def handleMessage(event):
     # Check if the message contains text
-    if received_message.get('text'):
-        # Create the payload for a basic text message
-        # sender.text_message(received_message['text'])
-        sender.quickreply_message(received_message['text'])
-        return
-    elif received_message.get('attachments'):
-        # Get the URL of the message attachment
-        attachment_url = received_message['attachments'][0]['payload']['url']
-        sender.image_message(attachment_url)
-    return
-
+    text = ""
+    if event.get('message'):
+        if event['message'].get('text'):
+            text = event['message']['text']
+    elif event.get('postback'):
+        if event['postback'].get('payload'):
+            text = event['postback']['payload']
+    return text
 
 # Create your views here.
-
 def show_fsm(self):
     machine.get_graph().draw('fsm.png', prog='dot', format='png')
     return
-
 
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
@@ -100,7 +101,11 @@ class IgBotView(generic.View):
             # Gets the body of the webhook event
             if entry.get('messaging'):
                 webhook_event = entry['messaging'][0]
-                machine.advance(webhook_event)
+                text = handleMessage(webhook_event)
+                print(text)
+                sender_id = webhook_event['sender']['id']
+                print(sender_id)
+                machine.advance(sender_id, text)
             return HttpResponse()
         else :
             return HttpResponse()
