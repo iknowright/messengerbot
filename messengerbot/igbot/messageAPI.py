@@ -41,37 +41,31 @@ class MessageAPI:
         response_msg = json.dumps({"recipient": {"id": self.fb_id}, "message": response})
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=response_msg)
 
-    def quickreply_message(self, content):
+    def quickreply_message(self):
         response = json.dumps({
             "recipient":{
                 "id":self.fb_id
             },
             "message":{
-                "text": "Here is a quick reply!",
+                "text": "What u gonna do!",
                 "quick_replies":[
                     {
                         "content_type":"location"
+                    },
+                    {
+                        "content_type":"text",
+                        "title":"看正妹",
+                        "payload":"看正妹"
+                    },
+                    {
+                        "content_type":"text",
+                        "title":"新增正妹",
+                        "payload":"新增正妹"
                     }
                 ]
             }  
         })
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=response)
-
-    def quickreply_message(self, content):
-        request = json.dumps({
-            "recipient":{
-                "id":self.fb_id
-            },
-            "message":{
-                "text": "Here is a quick reply!",
-                "quick_replies":[
-                    {
-                        "content_type":"location"
-                    }
-                ]
-            }  
-        })
-        requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
 
     def profileTemplates(self, num):
         igs = Instagrammer.objects.all()[:num]

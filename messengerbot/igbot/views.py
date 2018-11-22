@@ -100,21 +100,7 @@ class IgBotView(generic.View):
             # Gets the body of the webhook event
             if entry.get('messaging'):
                 webhook_event = entry['messaging'][0]
-                # Get the sender PSID
-                # sender_psid = webhook_event['sender']['id']
-
                 machine.advance(webhook_event)
-
-                # if webhook_event.get('message'):
-                #     try:
-                #         handleMessage(sender_psid, webhook_event['message'])
-                #     except:
-                #         return HttpResponse()
-                # elif webhook_event.get('postback'):
-                #     try:
-                #         handlePostback(sender_psid, webhook_event['postback'])
-                #     except:
-                #         return HttpResponse()
             return HttpResponse()
         else :
             return HttpResponse()

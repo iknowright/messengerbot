@@ -34,7 +34,8 @@ class TocMachine(GraphMachine):
         sender_id = event['sender']['id']
         api = MessageAPI(sender_id)
         # api.text_message("I'm entering state1")
-        api.profileTemplates(10)
+        # api.profileTemplates(10)
+        api.quickreply_message()
         self.go_back()
 
     def on_exit_state1(self):
