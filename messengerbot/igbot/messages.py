@@ -4,12 +4,12 @@ messages = {
         {
             "content_type":"text",
             "title":"開始",
-            "payload":"p_instadp_intro_開始"
+            "payload":"開始"
         },
         {
             "content_type":"text",
             "title":"返回",
-            "payload":"p_instadp_intro_返回"
+            "payload":"返回"
         }
     ]
 }

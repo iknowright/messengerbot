@@ -21,7 +21,6 @@ machine = TocMachine(
     states=[
         'user',
         'intro',
-        'state2',
         'instadp',
         'instadp_input'
     ],
@@ -39,12 +38,6 @@ machine = TocMachine(
             'conditions': 'say_instadp'
         },
         {
-            'trigger': 'advance',
-            'source': 'user',
-            'dest': 'state2',
-            'conditions': 'is_going_to_state2'
-        },
-        {
             'trigger': 'instadp_next',
             'source': 'instadp',
             'dest': 'instadp_input',
@@ -54,13 +47,12 @@ machine = TocMachine(
             'trigger': 'instadp_next',
             'source': 'instadp',
             'dest': 'intro',
-            'conditions': 'press_intro'
+            'conditions': 'press_return'
         },
         {
             'trigger': 'go_back',
             'source': [
                 'intro',
-                'state2',
                 'instadp'
             ],
             'dest': 'user'
@@ -87,6 +79,8 @@ def handleMessage(event):
 def handleTrigger(state, send_id, text):
     if state == "user":
         machine.advance(send_id, text)
+    if state == "instadp":
+        machine.instadp(send_id, text)
     
 
 # Create your views here.
