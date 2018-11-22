@@ -84,14 +84,24 @@ class MessageAPI:
                 "default_action": {
                     "type": "web_url",
                     "url": ig.url,
-                    "webview_height_ratio": "tall",
+                    "webview_height_ratio": "full",
                 },
                 "buttons":[
                     {
                         "type":"web_url",
                         "url":ig.url,
-                        "title":"View Website"
-                    }         
+                        "title":"View Website",
+                    },
+                    {
+                        "type": "postback",
+                        "title": "Like",
+                        "payload": "Like %s"%ig.id,
+                    },
+                    {
+                        "type": "element-share",
+                        "title": "Like",
+                        "payload": "Like %s"%ig.id,
+                    },
                 ]      
             })
         print(generic_template)
@@ -104,6 +114,7 @@ class MessageAPI:
                     "type":"template",
                     "payload":{
                         "template_type":"generic",
+                        "image_aspect_ratio":"square",
                         "elements": generic_template          
                     }
                 }

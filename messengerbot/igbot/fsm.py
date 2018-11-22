@@ -12,18 +12,20 @@ class TocMachine(GraphMachine):
 
     def is_going_to_state1(self, event):
         print("Testing State 1")
-        if event['message'].get('text'):
-            text = event['message']['text']
-            print("text:" + text)
-            return text.lower() == 'go to state1'
+        if event.get('message'):
+            if event['message'].get('text'):
+                text = event['message']['text']
+                print("text:" + text)
+                return text.lower() == 'go to state1'
         return False
 
     def is_going_to_state2(self, event):
-        print("Testing State 2")       
-        if event['message'].get('text'):
-            text = event['message']['text']
-            print("text:" + text)
-            return text.lower() == 'go to state2'
+        print("Testing State 2")
+        if event.get('message'):   
+            if event['message'].get('text'):
+                text = event['message']['text']
+                print("text:" + text)
+                return text.lower() == 'go to state2'
         return False
 
     def on_enter_state1(self, event):
