@@ -4,7 +4,9 @@ from igbot.models import Instagrammer
 from igbot.messages import *
 from igbot.instadp import *
 
+from igbot.igbot_setting import *
 singleIgUrl = ""
+post_url = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=%s" % ACCESS_TOKEN
 
 class TocMachine(GraphMachine):
 
@@ -14,6 +16,7 @@ class TocMachine(GraphMachine):
             **machine_configs
         )
         self.set_single_url()
+
 
     # set_single_url
     def set_single_url(self, ig_id = "",url = ""):
@@ -25,13 +28,13 @@ class TocMachine(GraphMachine):
 
     # ----------------Conditions--------------------
     # advance
-    def say_instadp(self, sender_id, text):
+    def is_instadp(self, sender_id, text):
         print("Testing Instadp")
-        return text == "instadp"
+        return text.lower() == "instadp"
 
-    def say_intro(self, sender_id, text):
-        print("Testing Intro")
-        return text != "instadp"
+    def not_instadp(self, sender_id, text):
+        print("Testing lobby")
+        return text.lower() != "instadp"
 
     # instadp_next
     def press_start(self, sender_id, text):
@@ -69,12 +72,6 @@ class TocMachine(GraphMachine):
 
 
     # ----------------States--------------------
-    
-
-    # intro
-    def on_enter_intro(self, sender_id, text):
-        print("I'm entering intro")
-        api = MessageAPI(sender_id)
 
     # instadp
     def on_enter_instadp(self, sender_id, text):
@@ -123,3 +120,8 @@ class TocMachine(GraphMachine):
         entry = Instagrammer.objects.get(id = ig_id)
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
+
+    # lobby
+    def on_enter_lobby(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        api.button_message(messages['lobby'], messages['lobby_button'])

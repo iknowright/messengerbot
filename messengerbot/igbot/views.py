@@ -20,25 +20,27 @@ post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCES
 machine = TocMachine(
     states=[
         'user',
-        'intro',
+        'lobby',
         'instadp',
         'instadpinput',
         'printinstadp',
         'instadperror',
         "printdpserver"
+        'igviewer'
+        'iguploader'
     ],
     transitions=[
         {
             'trigger': 'advance',
             'source': 'user',
-            'dest': 'intro',
-            'conditions': 'say_intro'
+            'dest': 'lobby',
+            'conditions': 'not_instadp'
         },
         {
             'trigger': 'advance',
             'source': 'user',
             'dest': 'instadp',
-            'conditions': 'say_instadp'
+            'conditions': 'is_instadp'
         },
         {
             'trigger': 'instadp_next',
@@ -49,7 +51,7 @@ machine = TocMachine(
         {
             'trigger': 'instadp_next',
             'source': 'instadp',
-            'dest': 'intro',
+            'dest': 'lobby',
             'conditions': 'press_return'
         },
         {
@@ -72,7 +74,7 @@ machine = TocMachine(
         {
             'trigger': 'instadpinput_next',
             'source': 'instadpinput',
-            'dest': 'intro',
+            'dest': 'lobby',
             'conditions': 'press_return'
         },
         {
@@ -93,14 +95,11 @@ machine = TocMachine(
             'dest': 'instadpinput',
         },
         {
-            'trigger': 'go_back',
-            'source': [
-                'intro',
-                'instadp',
-                # 'printinstadp'
-            ],
-            'dest': 'user'
-        }
+            'trigger': 'lobby_next',
+            'source': 'lobby',
+            'dest': 'instadp',
+            'conditions': 'is_instadp'
+        },
     ],
     initial='user',
     auto_transitions=False,
@@ -130,6 +129,8 @@ def handleTrigger(state, send_id, text):
         machine.instadpinput_next(send_id, text)
     if state == "printinstadp":
         machine.printdp_next(send_id, text)
+    if state == "lobby":
+        machine.lobby_next(send_id, text)
     
 
 # Create your views here.

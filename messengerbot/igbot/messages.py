@@ -29,7 +29,7 @@ messages = {
     "instadpinput_button":[
         {
             "type":"postback",
-            "title":"返回 Intro",
+            "title":"返回大廳",
             "payload":"返回"
         }
     ],
@@ -44,5 +44,23 @@ messages = {
             "title":"再一張",
             "payload":"再一張"
         }
+    ],
+    "lobby":"歡迎來到網美IG,專門獲取高推薦正妹IG的平臺！\n小弟很高興在此服務你～\n\n以下是我可以爲您做的事請",
+    "lobby_button":[
+        {
+            "type":"postback",
+            "title":"大頭照下載器",
+            "payload":"instadp"
+        },
+        {
+            "type":"postback",
+            "title":"看正妹",
+            "payload":"viewnormal"
+        },
+        {
+            "type":"postback",
+            "title":"我要貢獻",
+            "payload":"contribute"
+        },
     ]
 }
