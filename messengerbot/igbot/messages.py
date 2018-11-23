@@ -26,7 +26,7 @@ messages = {
         },
         
     ],
-    "instadpinput_button":[
+    "returnlobby_button":[
         {
             "type":"postback",
             "title":"返回大廳",
@@ -55,7 +55,7 @@ messages = {
         {
             "type":"postback",
             "title":"看正妹",
-            "payload":"viewnormal"
+            "payload":"view"
         },
         {
             "type":"postback",

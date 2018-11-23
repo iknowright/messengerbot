@@ -17,7 +17,6 @@ class TocMachine(GraphMachine):
         )
         self.set_single_url()
 
-
     # set_single_url
     def set_single_url(self, ig_id = "",url = ""):
         self.url = url
@@ -32,9 +31,20 @@ class TocMachine(GraphMachine):
         print("Testing Instadp")
         return text.lower() == "instadp"
 
-    def not_instadp(self, sender_id, text):
-        print("Testing lobby")
-        return text.lower() != "instadp"
+    def is_view(self, sender_id, text):
+        print("Testing View")
+        return text.lower() == "view"
+
+    def is_contribute(self, sender_id, text):
+        print("Testing Contribute")
+        return text.lower() == "contribute"
+
+    # printdp_next
+    def press_upload(self, sender_id, text):
+        return text == "上傳"
+
+    def press_again(self, sender_id, text):
+        return text == "再一張"
 
     # instadp_next
     def press_start(self, sender_id, text):
@@ -63,16 +73,13 @@ class TocMachine(GraphMachine):
         print(image_url)
         return image_url == "" and text != "返回"
 
-    # printdp_next
-    def press_upload(self, sender_id, text):
-        return text == "上傳"
-
-    def press_again(self, sender_id, text):
-        return text == "再一張"
-
-
     # ----------------States--------------------
 
+    # Lobby
+    def on_enter_lobby(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        api.button_message(messages['lobby'], messages['lobby_button'])
+    
     # instadp
     def on_enter_instadp(self, sender_id, text):
         api = MessageAPI(sender_id)
@@ -82,9 +89,7 @@ class TocMachine(GraphMachine):
     def on_enter_instadpinput(self, sender_id, text):
         api = MessageAPI(sender_id)
         print(text)
-        # api.button_message(messages['instadpinput'], messages['instadpinput_button'])
-        # api.quickreply_message("", messages['instadpinput_quickreply'])
-        api.quickreply_button_message(messages['instadpinput'], messages['instadpinput_quickreply'], messages['instadpinput_button'])
+        api.quickreply_button_message(messages['instadpinput'], messages['instadpinput_quickreply'], messages['returnlobby_button'])
 
     # printinstadp
     def on_enter_printinstadp(self, sender_id, text):
@@ -121,7 +126,13 @@ class TocMachine(GraphMachine):
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
 
-    # lobby
-    def on_enter_lobby(self, sender_id, text):
+    # Igviewer
+    def on_enter_igviewer(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.button_message(messages['lobby'], messages['lobby_button'])
+        api.button_message("igviewer Intro", messages['returnlobby_button'])
+
+    # Iguploader
+    def on_enter_iguploader(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        api.button_message("iguploader Intro", messages['returnlobby_button'])
+

@@ -25,8 +25,8 @@ machine = TocMachine(
         'instadpinput',
         'printinstadp',
         'instadperror',
-        "printdpserver"
-        'igviewer'
+        'printdpserver',
+        'igviewer',
         'iguploader'
     ],
     transitions=[
@@ -34,13 +34,6 @@ machine = TocMachine(
             'trigger': 'advance',
             'source': 'user',
             'dest': 'lobby',
-            'conditions': 'not_instadp'
-        },
-        {
-            'trigger': 'advance',
-            'source': 'user',
-            'dest': 'instadp',
-            'conditions': 'is_instadp'
         },
         {
             'trigger': 'instadp_next',
@@ -100,6 +93,30 @@ machine = TocMachine(
             'dest': 'instadp',
             'conditions': 'is_instadp'
         },
+        {
+            'trigger': 'lobby_next',
+            'source': 'lobby',
+            'dest': 'iguploader',
+            'conditions': 'is_contribute'
+        },
+        {
+            'trigger': 'lobby_next',
+            'source': 'lobby',
+            'dest': 'igviewer',
+            'conditions': 'is_view'
+        },
+        {
+            'trigger': 'igviewer_next',
+            'source': 'igviewer',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
+        {
+            'trigger': 'iguploader_next',
+            'source': 'iguploader',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
     ],
     initial='user',
     auto_transitions=False,
@@ -131,7 +148,10 @@ def handleTrigger(state, send_id, text):
         machine.printdp_next(send_id, text)
     if state == "lobby":
         machine.lobby_next(send_id, text)
-    
+    if state == "igviewer":
+        machine.igviewer_next(send_id, text)
+    if state == "iguploader":
+        machine.iguploader_next(send_id, text)
 
 # Create your views here.
 def show_fsm(self):
