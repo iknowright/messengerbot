@@ -22,7 +22,7 @@ def getID(username):
 
     else:
         print("\033[91m✘ Invalid username\033[0m")
-        sys.exit()
+        return ""
 
 
 def fetchDP(userID):
@@ -35,15 +35,17 @@ def fetchDP(userID):
 
     else:
         print("\033[91m✘ Cannot find user ID \033[0m")
-        sys.exit()
-
+        return "",""
 
 def getImageUrl(instagram_id):
     username = instagram_id
 
     user_id = getID(username)
-    # print(user_id)
+    if not user_id:
+        return "", ""
     file_url, biography = fetchDP(user_id)
+    if not file_url:
+        return "", ""
     fname = username + ".jpg"
 
     r = requests.get(file_url, stream=True)

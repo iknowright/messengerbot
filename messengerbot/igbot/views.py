@@ -22,7 +22,10 @@ machine = TocMachine(
         'user',
         'intro',
         'instadp',
-        'instadpinput'
+        'instadpinput',
+        'printinstadp',
+        'instadperror',
+        "printdpserver"
     ],
     transitions=[
         {
@@ -50,10 +53,51 @@ machine = TocMachine(
             'conditions': 'press_return'
         },
         {
+            'trigger': 'instadpinput_next',
+            'source': 'instadpinput',
+            'dest': 'printinstadp',
+            'conditions': 'valid_id'
+        },
+        {
+            'trigger': 'instadpinput_next',
+            'source': 'instadpinput',
+            'dest': 'instadperror',
+            'conditions': 'invalid_id'
+        },
+        {
+            'trigger': 'gobackinput',
+            'source': 'instadperror',
+            'dest': 'instadpinput',
+        },
+        {
+            'trigger': 'instadpinput_next',
+            'source': 'instadpinput',
+            'dest': 'intro',
+            'conditions': 'press_return'
+        },
+        {
+            'trigger': 'printdp_next',
+            'source': 'printinstadp',
+            'dest': 'instadpinput',
+            'conditions': 'press_again'
+        },
+        {
+            'trigger': 'printdp_next',
+            'source': 'printinstadp',
+            'dest': 'printdpserver',
+            'conditions': 'press_upload'
+        },
+        {
+            'trigger': 'gobackinput',
+            'source': 'printdpserver',
+            'dest': 'instadpinput',
+        },
+        {
             'trigger': 'go_back',
             'source': [
                 'intro',
-                'instadp'
+                # 'instadp',
+                # 'printinstadp'
             ],
             'dest': 'user'
         }
@@ -82,6 +126,10 @@ def handleTrigger(state, send_id, text):
         machine.advance(send_id, text)
     if state == "instadp":
         machine.instadp_next(send_id, text)
+    if state == "instadpinput":
+        machine.instadpinput_next(send_id, text)
+    if state == "printinstadp":
+        machine.printdp_next(send_id, text)
     
 
 # Create your views here.

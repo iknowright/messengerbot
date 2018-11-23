@@ -12,29 +12,13 @@ class MessageAPI:
         response_msg = json.dumps({"recipient": {"id": self.fb_id}, "message": {"text": content}})
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=response_msg)
 
-    def image_message(self, content):
+    def image_message(self, image_url):
         response = {
             "attachment": {
-                "type": "template",
+                "type": "image",
                 "payload": {
-                    "template_type": "generic",
-                    "elements": [{
-                        "title": "Pictures",
-                        "subtitle": "Tap a button to answer.",
-                        "image_url": content,
-                        "buttons": [
-                            {
-                                "type": "postback",
-                                "title": "Yes!",
-                                "payload": "yes",
-                            },
-                            {
-                                "type": "postback",
-                                "title": "No!",
-                                "payload": "no",
-                            }
-                        ],
-                    }]
+                    "url": image_url,
+                    "is_reusable":True
                 }
             }
         }
@@ -80,6 +64,43 @@ class MessageAPI:
                 ]      
             })
         print(generic_template)
+        request = json.dumps({
+            "recipient":{
+            "id":self.fb_id
+            },
+            "message":{
+                "attachment":{
+                    "type":"template",
+                    "payload":{
+                        "template_type":"generic",
+                        "image_aspect_ratio":"square",
+                        "elements": generic_template          
+                    }
+                }
+            }
+        })
+        requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
+
+    def profileTemplatesSingle(self, ig):
+        generic_template = [
+            {
+                "title":ig.id,
+                "image_url":ig.image_url,
+                # "subtitle":"",
+                "default_action": {
+                    "type": "web_url",
+                    "url": ig.url,
+                    "webview_height_ratio": "full",
+                },
+                "buttons":[
+                    {
+                        "type":"web_url",
+                        "url":ig.url,
+                        "title":"View Website",
+                    }
+                ]      
+            }
+        ]
         request = json.dumps({
             "recipient":{
             "id":self.fb_id

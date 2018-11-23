@@ -23,6 +23,23 @@ messages = {
             "content_type":"text",
             "title":"christinexlo",
             "payload":"christinexlo"
+        },
+        {
+            "content_type":"text",
+            "title":"返回 Intro",
+            "payload":"返回"
+        }
+    ],
+    "printdp_quickreply": [
+        {
+            "content_type":"text",
+            "title":"上傳",
+            "payload":"上傳"
+        },
+        {
+            "content_type":"text",
+            "title":"再一張",
+            "payload":"再一張"
         }
     ]
 }
