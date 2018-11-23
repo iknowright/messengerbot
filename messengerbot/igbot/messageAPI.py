@@ -36,6 +36,24 @@ class MessageAPI:
             }  
         })
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=response)
+    
+    def button_message(self, text, button):
+        response = json.dumps({
+            "recipient":{
+                "id":self.fb_id
+            },
+            "message":{
+                "attachment":{
+                    "type":"template",
+                    "payload":{
+                        "template_type":"button",
+                        "text":text,
+                        "buttons":button
+                    }
+                }
+            }
+        })
+        requests.post(post_url, headers={"Content-Type": "application/json"}, data=response)
 
     def profileTemplates(self, num):
         igs = Instagrammer.objects.all()[:num]
@@ -117,3 +135,22 @@ class MessageAPI:
             }
         })
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
+
+    def quickreply_button_message(self, text, quickreply, button):
+        response = json.dumps({
+            "recipient":{
+                "id":self.fb_id
+            },
+            "message":{
+                "attachment":{
+                    "type":"template",
+                    "payload":{
+                        "template_type":"button",
+                        "text":text,
+                        "buttons":button
+                    }
+                },
+                "quick_replies":quickreply
+            }
+        })
+        requests.post(post_url, headers={"Content-Type": "application/json"}, data=response)

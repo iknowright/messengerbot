@@ -75,25 +75,26 @@ class TocMachine(GraphMachine):
     def on_enter_intro(self, sender_id, text):
         print("I'm entering intro")
         api = MessageAPI(sender_id)
-        self.go_back()
 
     # instadp
     def on_enter_instadp(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.quickreply_message(messages['instadp'], messages['instadp_quickreply'])
+        api.button_message(messages['instadp'], messages['instadp_button'])
 
     # instadp_input
     def on_enter_instadpinput(self, sender_id, text):
         api = MessageAPI(sender_id)
         print(text)
-        api.quickreply_message(messages['instadpinput'], messages['instadpinput_quickreply'])
+        # api.button_message(messages['instadpinput'], messages['instadpinput_button'])
+        # api.quickreply_message("", messages['instadpinput_quickreply'])
+        api.quickreply_button_message(messages['instadpinput'], messages['instadpinput_quickreply'], messages['instadpinput_button'])
 
     # printinstadp
     def on_enter_printinstadp(self, sender_id, text):
         api = MessageAPI(sender_id)
         ig_id, url = self.get_single_url()
         api.image_message(url)
-        api.quickreply_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_quickreply'])
+        api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
 
     # instadperror
     def on_enter_instadperror(self, sender_id, text):
@@ -118,7 +119,7 @@ class TocMachine(GraphMachine):
                 url = "https://www.instagram.com/%s" % ig_id,
                 image_url = url
             )
+            api.text_message("IG上傳成功")
         entry = Instagrammer.objects.get(id = ig_id)
-        api.text_message("IG上傳成功")
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
