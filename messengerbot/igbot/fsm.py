@@ -58,7 +58,7 @@ class TocMachine(GraphMachine):
         print(text)
         image_url, bio = getImageUrl(text)
         print(image_url)
-        return image_url == ""
+        return image_url == "" and text != "返回"
 
     # printdp_next
     def press_upload(self, sender_id, text):

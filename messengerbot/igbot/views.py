@@ -96,7 +96,7 @@ machine = TocMachine(
             'trigger': 'go_back',
             'source': [
                 'intro',
-                # 'instadp',
+                'instadp',
                 # 'printinstadp'
             ],
             'dest': 'user'
