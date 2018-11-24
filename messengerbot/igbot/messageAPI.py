@@ -104,7 +104,7 @@ class MessageAPI:
             {
                 "title":ig.id,
                 "image_url":ig.image_url,
-                # "subtitle":"",
+                "subtitle":"%s..."%ig.content[:76],
                 "default_action": {
                     "type": "web_url",
                     "url": ig.url,

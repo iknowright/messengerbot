@@ -87,6 +87,10 @@ class TocMachine(GraphMachine):
         textlist = text.split(' ')
         if len(textlist) >= 4 or len(textlist) == 0:
             return False
+        entry = Instagrammer.objects.filter(id = textlist[0])
+        if entry.exists():
+            self.set_command(True)
+            return True
         image_url, bio = getImageUrl(textlist[0])
         if image_url:
             self.set_command(True)
@@ -97,6 +101,9 @@ class TocMachine(GraphMachine):
         tmp = self.get_command()
         self.set_command(False)
         return not tmp
+
+    def not_return(self, sender_id, text):
+        return text != '返回'
 
     # ----------------States--------------------
 
@@ -193,3 +200,8 @@ class TocMachine(GraphMachine):
         api = MessageAPI(sender_id)
         api.text_message("格式錯誤請重新再試")
         self.gobackupload(sender_id, text)
+
+    def on_enter_viewig(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        api.text_message("處理資料看正妹")
+        self.gobackviewer(sender_id, text)

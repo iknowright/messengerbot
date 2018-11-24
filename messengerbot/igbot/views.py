@@ -29,7 +29,8 @@ machine = TocMachine(
         'igviewer',
         'iguploader',
         'uploadsingle',
-        'uploaderror'
+        'uploaderror',
+        'viewig'
     ],
     transitions=[
         {
@@ -140,6 +141,17 @@ machine = TocMachine(
             'trigger': 'gobackupload',
             'source': 'uploaderror',
             'dest': 'iguploader',
+        },
+        {
+            'trigger': 'igviewer_next',
+            'source': 'igviewer',
+            'dest': 'viewig',
+            'conditions': 'not_return'
+        },
+        {
+            'trigger': 'gobackviewer',
+            'source': 'viewig',
+            'dest': 'igviewer',
         },
     ],
     initial='user',
