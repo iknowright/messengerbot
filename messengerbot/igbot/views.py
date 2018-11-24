@@ -27,7 +27,9 @@ machine = TocMachine(
         'instadperror',
         'printdpserver',
         'igviewer',
-        'iguploader'
+        'iguploader',
+        'uploadsingle',
+        'uploaderror'
     ],
     transitions=[
         {
@@ -116,6 +118,28 @@ machine = TocMachine(
             'source': 'iguploader',
             'dest': 'lobby',
             'conditions': 'press_return'
+        },
+        {
+            'trigger': 'iguploader_next',
+            'source': 'iguploader',
+            'dest': 'uploadsingle',
+            'conditions': 'validcommand'
+        },
+        {
+            'trigger': 'iguploader_next',
+            'source': 'iguploader',
+            'dest': 'uploaderror',
+            'conditions': 'invalidcommand'
+        },
+        {
+            'trigger': 'gobackupload',
+            'source': 'uploadsingle',
+            'dest': 'iguploader',
+        },
+        {
+            'trigger': 'gobackupload',
+            'source': 'uploaderror',
+            'dest': 'iguploader',
         },
     ],
     initial='user',

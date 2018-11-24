@@ -18,12 +18,19 @@ class TocMachine(GraphMachine):
         self.set_single_url()
 
     # set_single_url
-    def set_single_url(self, ig_id = "",url = ""):
+    def set_single_url(self, ig_id = "",url = "", bio = ""):
         self.url = url
+        self.bio = bio
         self.ig_id = ig_id
     
     def get_single_url(self):
         return self.ig_id, self.url
+
+    def set_command(self, valid = False):
+        self.valid = valid
+
+    def get_command(self):
+        return self.valid
 
     # ----------------Conditions--------------------
     # advance
@@ -62,7 +69,7 @@ class TocMachine(GraphMachine):
         print("Testing valid_id")
         print(text)
         image_url, bio = getImageUrl(text)
-        self.set_single_url(text, image_url)
+        self.set_single_url(text, image_url, bio)
         print(image_url)
         return image_url != ""
 
@@ -72,6 +79,24 @@ class TocMachine(GraphMachine):
         image_url, bio = getImageUrl(text)
         print(image_url)
         return image_url == "" and text != "返回"
+
+    def validcommand(self, sender_id, text):
+        print("Testing valid command")
+        self.set_command(False)
+        print(text)
+        textlist = text.split(' ')
+        if len(textlist) >= 4 or len(textlist) == 0:
+            return False
+        image_url, bio = getImageUrl(textlist[0])
+        if image_url:
+            self.set_command(True)
+            return True
+
+    def invalidcommand(self, sender_id, text):
+        print("Testing invalid command")
+        tmp = self.get_command()
+        self.set_command(False)
+        return not tmp
 
     # ----------------States--------------------
 
@@ -108,7 +133,7 @@ class TocMachine(GraphMachine):
     # instadperror
     def on_enter_printdpserver(self, sender_id, text):
         api = MessageAPI(sender_id)
-        ig_id, url = self.get_single_url()
+        ig_id, url, bio = self.get_single_url()
         entry = Instagrammer.objects.filter(id = ig_id)
         if entry.exists():
             api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
@@ -117,7 +142,7 @@ class TocMachine(GraphMachine):
                 id = ig_id,
                 genre = "",
                 country = "",
-                content = "",
+                content = bio,
                 url = "https://www.instagram.com/%s" % ig_id,
                 image_url = url
             )
@@ -136,3 +161,35 @@ class TocMachine(GraphMachine):
         api = MessageAPI(sender_id)
         api.button_message("iguploader Intro", messages['returnlobby_button'])
 
+    def on_enter_uploadsingle(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        genre = "無"
+        country = "無"
+        textlist = text.split(' ')
+        if len(textlist) == 3:
+            genre = textlist[1]
+            country = textlist[2]
+        elif len(textlist) == 2:
+            genre = textlist[1]
+
+        entry = Instagrammer.objects.filter(id = textlist[0])
+        if entry.exists():
+            api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
+        else:
+            image_url, bio = getImageUrl(textlist[0])
+            Instagrammer.objects.create(
+                id = textlist[0],
+                genre = genre,
+                country = country,
+                content = bio,
+                url = "https://www.instagram.com/%s" % textlist[0],
+                image_url = image_url
+            )
+        entry = Instagrammer.objects.get(id = textlist[0])
+        api.profileTemplatesSingle(entry)
+        self.gobackupload(sender_id, text)
+
+    def on_enter_uploaderror(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        api.text_message("格式錯誤請重新再試")
+        self.gobackupload(sender_id, text)
