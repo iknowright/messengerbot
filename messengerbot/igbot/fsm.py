@@ -87,6 +87,8 @@ class TocMachine(GraphMachine):
         textlist = text.split(' ')
         if len(textlist) >= 4 or len(textlist) == 0:
             return False
+        elif textlist[0] == 'payload_like':
+            return False
         entry = Instagrammer.objects.filter(id = textlist[0])
         if entry.exists():
             self.set_command(True)
@@ -97,6 +99,9 @@ class TocMachine(GraphMachine):
             return True
 
     def invalidcommand(self, sender_id, text):
+        textlist = text.split(' ')
+        if textlist[0] == 'payload_like':
+            return False
         print("Testing invalid command")
         tmp = self.get_command()
         self.set_command(False)
@@ -104,6 +109,10 @@ class TocMachine(GraphMachine):
 
     def not_return(self, sender_id, text):
         return text != '返回'
+
+    def is_payloadlike(self, sender_id, text):
+        textlist = text.split(' ')
+        return textlist[0] == 'payload_like' 
 
     # ----------------States--------------------
 
@@ -205,3 +214,12 @@ class TocMachine(GraphMachine):
         api = MessageAPI(sender_id)
         api.text_message("處理資料看正妹")
         self.gobackviewer(sender_id, text)
+
+    def on_enter_likeig(self, sender_id, text):
+        api = MessageAPI(sender_id)
+        textlist = text.split(' ')
+        liked_entry = Instagrammer.objects.get(id=textlist[1])
+        liked_entry.likes += 1
+        liked_entry.save()
+        api.text_message("liked %s, likes:%d"%(textlist[1],liked_entry.likes))
+        self.gobackupload(sender_id, text)

@@ -77,7 +77,7 @@ class MessageAPI:
                     {
                         "type": "postback",
                         "title": "Like",
-                        "payload": "Like %s"%ig.id,
+                        "payload": "payload_like %s"%ig.id,
                     },
                 ]      
             })
@@ -115,7 +115,12 @@ class MessageAPI:
                         "type":"web_url",
                         "url":ig.url,
                         "title":"View Website",
-                    }
+                    },
+                    {
+                        "type": "postback",
+                        "title": "Like",
+                        "payload": "payload_like %s"%ig.id,
+                    },
                 ]      
             }
         ]
