@@ -80,39 +80,8 @@ class TocMachine(GraphMachine):
         print(image_url)
         return image_url == "" and text != "返回"
 
-    def validcommand(self, sender_id, text):
-        print("Testing valid command")
-        self.set_command(False)
-        print(text)
-        textlist = text.split(' ')
-        if len(textlist) >= 4 or len(textlist) == 0:
-            return False
-        elif textlist[0] == 'payload_like':
-            return False
-        entry = Instagrammer.objects.filter(id = textlist[0])
-        if entry.exists():
-            self.set_command(True)
-            return True
-        image_url, bio = getImageUrl(textlist[0])
-        if image_url:
-            self.set_command(True)
-            return True
-
-    def invalidcommand(self, sender_id, text):
-        textlist = text.split(' ')
-        if textlist[0] == 'payload_like':
-            return False
-        print("Testing invalid command")
-        tmp = self.get_command()
-        self.set_command(False)
-        return not tmp
-
     def not_return(self, sender_id, text):
         return text != '返回'
-
-    def is_payloadlike(self, sender_id, text):
-        textlist = text.split(' ')
-        return textlist[0] == 'payload_like' 
 
     # ----------------States--------------------
 
@@ -170,56 +139,56 @@ class TocMachine(GraphMachine):
     # Igviewer
     def on_enter_igviewer(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.button_message("igviewer Intro", messages['returnlobby_button'])
+        api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n我要看馬來西亞正妹", messages['returnlobby_button'])
 
     # Iguploader
     def on_enter_iguploader(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.button_message("iguploader Intro", messages['returnlobby_button'])
-
-    def on_enter_uploadsingle(self, sender_id, text):
-        api = MessageAPI(sender_id)
-        genre = "無"
-        country = "無"
-        textlist = text.split(' ')
-        if len(textlist) == 3:
-            genre = textlist[1]
-            country = textlist[2]
-        elif len(textlist) == 2:
-            genre = textlist[1]
-
-        entry = Instagrammer.objects.filter(id = textlist[0])
-        if entry.exists():
-            api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
-        else:
-            image_url, bio = getImageUrl(textlist[0])
-            Instagrammer.objects.create(
-                id = textlist[0],
-                genre = genre,
-                country = country,
-                content = bio,
-                url = "https://www.instagram.com/%s" % textlist[0],
-                image_url = image_url
-            )
-        entry = Instagrammer.objects.get(id = textlist[0])
-        api.profileTemplatesSingle(entry)
-        self.gobackupload(sender_id, text)
-
-    def on_enter_uploaderror(self, sender_id, text):
-        api = MessageAPI(sender_id)
-        api.text_message("格式錯誤請重新再試")
-        self.gobackupload(sender_id, text)
-
+        api.button_message("上傳格式: ig_id [分類] [國家] （以空白爲分割，中括號爲Optional)\n 例: changchaishi 小編 臺灣", messages['returnlobby_button'])
+        
     def on_enter_viewig(self, sender_id, text):
         api = MessageAPI(sender_id)
         api.text_message("處理資料看正妹")
         self.gobackviewer(sender_id, text)
 
-    def on_enter_likeig(self, sender_id, text):
+    def on_enter_uploadprocess(self, sender_id, text):
         api = MessageAPI(sender_id)
         textlist = text.split(' ')
-        liked_entry = Instagrammer.objects.get(id=textlist[1])
-        liked_entry.likes += 1
-        liked_entry.save()
-        api.text_message("liked %s, likes:%d"%(textlist[1],liked_entry.likes))
-        self.gobackupload(sender_id, text)
+        if len(textlist) >= 4 or len(textlist) == 0:
+            api.text_message("格式錯誤請重新再試")
+            self.gobackupload(sender_id, text)
+        elif textlist[0] == 'payload_like':
+            liked_entry = Instagrammer.objects.get(id=textlist[1])
+            liked_entry.likes += 1
+            liked_entry.save()
+            api.text_message("liked %s, likes:%d"%(textlist[1],liked_entry.likes))
+            self.gobackupload(sender_id, text)
+        else:
+            genre = "無"
+            country = "無"
+            textlist = text.split(' ')
+            if len(textlist) == 3:
+                genre = textlist[1]
+                country = textlist[2]
+            elif len(textlist) == 2:
+                genre = textlist[1]
+            entry = Instagrammer.objects.filter(id = textlist[0])
+            if entry.exists():
+                entry = Instagrammer.objects.get(id = textlist[0])
+                api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
+                entry.country = country
+                entry.genre = genre
+                entry.save()
+            else:
+                image_url, bio = getImageUrl(textlist[0])
+                Instagrammer.objects.create(
+                    id = textlist[0],
+                    genre = genre,
+                    country = country,
+                    content = bio,
+                    url = "https://www.instagram.com/%s" % textlist[0],
+                    image_url = image_url
+                )
+            entry = Instagrammer.objects.get(id = textlist[0])
+            api.profileTemplatesSingle(entry)
+            self.gobackupload(sender_id, text)

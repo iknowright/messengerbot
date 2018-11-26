@@ -28,10 +28,8 @@ machine = TocMachine(
         'printdpserver',
         'igviewer',
         'iguploader',
-        'uploadsingle',
-        'uploaderror',
         'viewig',
-        'likeig'
+        'uploadprocess'
     ],
     transitions=[
         {
@@ -122,28 +120,6 @@ machine = TocMachine(
             'conditions': 'press_return'
         },
         {
-            'trigger': 'iguploader_next',
-            'source': 'iguploader',
-            'dest': 'uploadsingle',
-            'conditions': 'validcommand'
-        },
-        {
-            'trigger': 'iguploader_next',
-            'source': 'iguploader',
-            'dest': 'uploaderror',
-            'conditions': 'invalidcommand'
-        },
-        {
-            'trigger': 'gobackupload',
-            'source': 'uploadsingle',
-            'dest': 'iguploader',
-        },
-        {
-            'trigger': 'gobackupload',
-            'source': 'uploaderror',
-            'dest': 'iguploader',
-        },
-        {
             'trigger': 'igviewer_next',
             'source': 'igviewer',
             'dest': 'viewig',
@@ -155,15 +131,14 @@ machine = TocMachine(
             'dest': 'igviewer',
         },
         {
-            'trigger': 'gobackupload',
-            'source': 'likeig',
+            'trigger':'gobackupload',
+            'source': 'uploadprocess',
             'dest': 'iguploader',
         },
         {
             'trigger': 'iguploader_next',
             'source': 'iguploader',
-            'dest': 'likeig',
-            'conditions': 'is_payloadlike'
+            'dest': 'uploadprocess',
         },
     ],
     initial='user',
