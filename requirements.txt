@@ -18,3 +18,4 @@ gunicorn
 django-heroku
 transitions
 pygraphviz
+graphviz
