@@ -1,4 +1,3 @@
-# from transitions.extensions import GraphMachine
 from transitions import Machine
 from igbot.messageAPI import MessageAPI
 from igbot.models import Instagrammer

@@ -150,7 +150,6 @@ machine = TocMachine(
     ],
     initial='user',
     auto_transitions=False,
-    # show_conditions=True,
 )
 
 # Handle messages events
@@ -184,11 +183,6 @@ def handleTrigger(state, send_id, text):
         machine.iguploader_next(send_id, text)
     if state == "viewig":
         machine.view_next(send_id, text)
-
-# Create your views here.
-# def show_fsm(self):
-#     machine.get_graph().draw('fsm.png', prog='dot', format='png')
-#     return HttpResponse()
 
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
