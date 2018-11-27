@@ -186,9 +186,9 @@ def handleTrigger(state, send_id, text):
         machine.view_next(send_id, text)
 
 # Create your views here.
-def show_fsm(self):
-    machine.get_graph().draw('fsm.png', prog='dot', format='png')
-    return HttpResponse()
+# def show_fsm(self):
+#     machine.get_graph().draw('fsm.png', prog='dot', format='png')
+#     return HttpResponse()
 
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
