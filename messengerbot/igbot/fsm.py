@@ -5,6 +5,7 @@ from igbot.messages import *
 from igbot.instadp import *
 
 from igbot.igbot_setting import *
+import operator
 singleIgUrl = ""
 post_url = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=%s" % ACCESS_TOKEN
 
@@ -149,8 +150,7 @@ class TocMachine(GraphMachine):
             countrylist = "%s\n%s" % (countrylist, entry['country'])
         print(genrelist)
         print(countrylist)
-        # api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n我要看馬來西亞正妹", messages['returnlobby_button'])
-        api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n範例:\"我要看馬來西亞正妹\"\n\n特殊關鍵字:\n熱門（Likes)\n最新(引進日期)\n\n類型關鍵字:%s\n\n國家關鍵字(Less Precedece):%s" % (genrelist, countrylist), messages['returnlobby_button'])        
+        api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n範例:\"我要看馬來西亞正妹\"\n\n特殊關鍵字:\n熱門（Likes)\n最新(引進日期)\n\n類型關鍵字:%s\n\n國家關鍵字:%s" % (genrelist, countrylist), messages['returnlobby_button'])        
 
     # Iguploader
     def on_enter_iguploader(self, sender_id, text):
@@ -159,8 +159,41 @@ class TocMachine(GraphMachine):
         
     def on_enter_viewig(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.text_message("處理資料看正妹")
-        self.gobackviewer(sender_id, text)
+        genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
+        countries = Instagrammer.objects.order_by('country').values('country').distinct()
+        genre_taken = ""
+        country_taken = ""
+        genreflag = False
+        countryflag = False
+        for entry in genres:
+            r = text.find(entry['genre'])
+            if r > 0 and genreflag is False:
+                genreflag = True
+                genre_taken = entry['genre']
+                r_genre = r
+        for entry in countries:
+            r = text.find(entry['country'])
+            if r > 0 and countryflag is False:
+                countryflag = True
+                country_taken = entry['country']
+                r_country = r
+        filterig = Instagrammer.objects.all()
+        if genre_taken and not country_taken:
+            filterig = filterig.filter(genre = genre_taken)
+        elif country_taken and not genre_taken:
+            filterig = filterig.filter(country = country_taken)
+        elif genre_taken and country_taken:
+            if len(filterig.filter(country = country_taken).filter(genre = genre_taken)) == 0:
+                print(r_country)
+                print(r_genre)
+                print(filterig)          
+                if r_country < r_genre:
+                    filterig = filterig.filter(country = country_taken)
+                else:
+                    filterig = filterig.filter(genre = genre_taken)
+            else:
+                filterig = filterig.filter(country = country_taken).filter(genre = genre_taken)     
+        api.profileTemplates(filterig)
 
     def on_enter_uploadprocess(self, sender_id, text):
         api = MessageAPI(sender_id)

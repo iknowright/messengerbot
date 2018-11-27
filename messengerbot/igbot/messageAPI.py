@@ -55,14 +55,19 @@ class MessageAPI:
         })
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=response)
 
-    def profileTemplates(self, num):
-        igs = Instagrammer.objects.all()[:num]
+    def profileTemplates(self, entries):
+        entries = entries[:10]
         generic_template = []
-        for ig in igs:
+        for ig in entries:
+            title = ig.id
+            if not ig.genre or ig.genre != "無":
+                title = "%s %s" % (title, ig.genre)
+            if not ig.country or ig.country != "無":
+                title = "%s %s" % (title, ig.country)
             generic_template.append({
-                "title":ig.id,
+                "title":title,
                 "image_url":ig.image_url,
-                # "subtitle":"",
+                "subtitle":"%s..." % ig.content[:76],
                 "default_action": {
                     "type": "web_url",
                     "url": ig.url,
@@ -100,9 +105,14 @@ class MessageAPI:
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
 
     def profileTemplatesSingle(self, ig):
+        title = ig.id
+        if not ig.genre or ig.genre != "無":
+            title = "%s %s" % (title, ig.genre)
+        if not ig.country or ig.country != "無":
+            title = "%s %s" % (title, ig.country)
         generic_template = [
             {
-                "title":ig.id,
+                "title": title,
                 "image_url":ig.image_url,
                 "subtitle":"%s..."%ig.content[:76],
                 "default_action": {

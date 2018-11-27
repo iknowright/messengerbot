@@ -126,11 +126,6 @@ machine = TocMachine(
             'conditions': 'not_return'
         },
         {
-            'trigger': 'gobackviewer',
-            'source': 'viewig',
-            'dest': 'igviewer',
-        },
-        {
             'trigger':'gobackupload',
             'source': 'uploadprocess',
             'dest': 'iguploader',
@@ -139,6 +134,18 @@ machine = TocMachine(
             'trigger': 'iguploader_next',
             'source': 'iguploader',
             'dest': 'uploadprocess',
+        },
+        {
+            'trigger': 'view_next',
+            'source': 'viewig',
+            'dest': 'viewig',
+            'conditions': 'not_return'
+        },
+        {
+            'trigger': 'view_next',
+            'source': 'viewig',
+            'dest': 'lobby',
+            'conditions': 'press_return'
         },
     ],
     initial='user',
@@ -175,6 +182,8 @@ def handleTrigger(state, send_id, text):
         machine.igviewer_next(send_id, text)
     if state == "iguploader":
         machine.iguploader_next(send_id, text)
+    if state == "viewig":
+        machine.view_next(send_id, text)
 
 # Create your views here.
 def show_fsm(self):
