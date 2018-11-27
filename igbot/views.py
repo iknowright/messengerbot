@@ -150,7 +150,7 @@ machine = TocMachine(
     ],
     initial='user',
     auto_transitions=False,
-    show_conditions=True,
+    # show_conditions=True,
 )
 
 # Handle messages events
