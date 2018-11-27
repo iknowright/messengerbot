@@ -77,10 +77,6 @@ WSGI_APPLICATION = 'messengerbot.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.parse("postgres://zlbgayvjjrflcb:49016c33303b55a11c1af08615776b051785cfb8b666bfdf04d6b71030f69885@ec2-23-21-65-173.compute-1.amazonaws.com:5432/de4ueiul1ev9tj")
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -122,3 +118,6 @@ STATIC_URL = '/static/'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
