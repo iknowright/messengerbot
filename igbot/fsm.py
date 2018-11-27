@@ -12,7 +12,7 @@ post_url = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=%s
 class TocMachine(Machine):
 
     def __init__(self, **machine_configs):
-        self.machine = GraphMachine(
+        self.machine = Machine(
             model=self,
             **machine_configs
         )
