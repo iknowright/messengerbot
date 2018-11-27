@@ -139,7 +139,18 @@ class TocMachine(GraphMachine):
     # Igviewer
     def on_enter_igviewer(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n我要看馬來西亞正妹", messages['returnlobby_button'])
+        genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
+        genrelist = ""
+        for entry in genres:
+            genrelist = "%s\n%s" % (genrelist,entry['genre'])
+        countries = Instagrammer.objects.order_by('country').values('country').distinct()
+        countrylist = ""
+        for entry in countries:
+            countrylist = "%s\n%s" % (countrylist, entry['country'])
+        print(genrelist)
+        print(countrylist)
+        # api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n我要看馬來西亞正妹", messages['returnlobby_button'])
+        api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n範例:\"我要看馬來西亞正妹\"\n\n特殊關鍵字:\n熱門（Likes)\n最新(引進日期)\n\n類型關鍵字:%s\n\n國家關鍵字(Less Precedece):%s" % (genrelist, countrylist), messages['returnlobby_button'])        
 
     # Iguploader
     def on_enter_iguploader(self, sender_id, text):
