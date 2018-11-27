@@ -17,3 +17,4 @@ imgurpython
 gunicorn
 django-heroku
 transitions
+dj_database_url

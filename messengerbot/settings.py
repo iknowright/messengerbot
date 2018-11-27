@@ -78,10 +78,7 @@ WSGI_APPLICATION = 'messengerbot.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.parse("postgres://zlbgayvjjrflcb:49016c33303b55a11c1af08615776b051785cfb8b666bfdf04d6b71030f69885@ec2-23-21-65-173.compute-1.amazonaws.com:5432/de4ueiul1ev9tj")
 }
 
 
