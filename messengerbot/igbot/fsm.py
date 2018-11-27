@@ -150,50 +150,72 @@ class TocMachine(GraphMachine):
             countrylist = "%s\n%s" % (countrylist, entry['country'])
         print(genrelist)
         print(countrylist)
-        api.button_message("輸入搜尋關鍵字\n\"我要看[臺灣/火熱/最新/推薦/Youtuber]正妹\"\n範例:\"我要看馬來西亞正妹\"\n\n特殊關鍵字:\n熱門（Likes)\n最新(引進日期)\n\n類型關鍵字:%s\n\n國家關鍵字:%s" % (genrelist, countrylist), messages['returnlobby_button'])        
+        api.button_message("輸入搜尋關鍵字\n\"我要看[關鍵字]正妹\"\n\n特殊關鍵字[一項]:\n熱門（Order By Likes)\n最新(Order By Create Date)\n\n類別關鍵字[一項]:%s\n\n國家關鍵字[一項]:%s" % (genrelist, countrylist), messages['returnlobby_button'])        
+        api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])
 
     # Iguploader
     def on_enter_iguploader(self, sender_id, text):
         api = MessageAPI(sender_id)
-        api.button_message("上傳格式: ig_id [分類] [國家] （以空白爲分割，中括號爲Optional)\n 例: changchaishi 小編 臺灣", messages['returnlobby_button'])
+        api.button_message("上傳格式: ig_id [分類] [國家] \n（以空白爲分割，中括號爲選項)\n 例: changchaishi 小編 臺灣", messages['returnlobby_button'])
         
     def on_enter_viewig(self, sender_id, text):
         api = MessageAPI(sender_id)
-        genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
-        countries = Instagrammer.objects.order_by('country').values('country').distinct()
-        genre_taken = ""
-        country_taken = ""
-        genreflag = False
-        countryflag = False
-        for entry in genres:
-            r = text.find(entry['genre'])
-            if r > 0 and genreflag is False:
-                genreflag = True
-                genre_taken = entry['genre']
-                r_genre = r
-        for entry in countries:
-            r = text.find(entry['country'])
-            if r > 0 and countryflag is False:
-                countryflag = True
-                country_taken = entry['country']
-                r_country = r
-        filterig = Instagrammer.objects.all()
-        if genre_taken and not country_taken:
-            filterig = filterig.filter(genre = genre_taken)
-        elif country_taken and not genre_taken:
-            filterig = filterig.filter(country = country_taken)
-        elif genre_taken and country_taken:
-            if len(filterig.filter(country = country_taken).filter(genre = genre_taken)) == 0:
-                print(r_country)
-                print(r_genre)
-                print(filterig)          
-                if r_country < r_genre:
-                    filterig = filterig.filter(country = country_taken)
+        textlist = text.split(' ')
+        if textlist[0] == "payload_like":
+            liked_entry = Instagrammer.objects.get(id=textlist[1])
+            liked_entry.likes += 1
+            liked_entry.save()
+            api.text_message("liked %s, likes:%d"%(textlist[1],liked_entry.likes))
+            api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])            
+        elif len(text) < 5 or not (text[0] == '我' and text[1] == '要' and text[2] == '看' and text[-2] == '正' and text[-1] == '妹'):
+            api.text_message("格式錯誤請重新再試")
+        else:
+            genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
+            countries = Instagrammer.objects.order_by('country').values('country').distinct()
+            genre_taken = ""
+            country_taken = ""
+            keyword = ""
+            genreflag = False
+            countryflag = False
+            for entry in genres:
+                r = text.find(entry['genre'])
+                if r > 0 and genreflag is False:
+                    genreflag = True
+                    genre_taken = entry['genre']
+                    r_genre = r
+            for entry in countries:
+                r = text.find(entry['country'])
+                if r > 0 and countryflag is False:
+                    countryflag = True
+                    country_taken = entry['country']
+                    r_country = r
+            filterig = Instagrammer.objects.all()
+            if genre_taken and not country_taken:
+                filterig = filterig.filter(genre = genre_taken)
+                keyword = genre_taken
+            elif country_taken and not genre_taken:
+                filterig = filterig.filter(country = country_taken)
+                keyword = country_taken
+            elif genre_taken and country_taken:
+                if len(filterig.filter(country = country_taken).filter(genre = genre_taken)) == 0:      
+                    if r_country < r_genre:
+                        filterig = filterig.filter(country = country_taken)
+                        keyword = country_taken
+                    else:
+                        filterig = filterig.filter(genre = genre_taken)
+                        keyword = genre_taken
                 else:
-                    filterig = filterig.filter(genre = genre_taken)
-            else:
-                filterig = filterig.filter(country = country_taken).filter(genre = genre_taken)     
-        api.profileTemplates(filterig)
+                    filterig = filterig.filter(country = country_taken).filter(genre = genre_taken)
+                    keyword = "%s %s" % (country_taken, genre_taken)
+            keyword = "關鍵字: %s | %d筆" % (keyword, len(filterig))
+            if text.find('最新'):
+                filterig = filterig.order_by('create_at')
+            if text.find('推薦'):
+                filterig = filterig.order_by('likes')
+            api.profileTemplates(filterig)
+            api.text_message(keyword)
+            api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])
+            
 
     def on_enter_uploadprocess(self, sender_id, text):
         api = MessageAPI(sender_id)
@@ -205,7 +227,7 @@ class TocMachine(GraphMachine):
             liked_entry = Instagrammer.objects.get(id=textlist[1])
             liked_entry.likes += 1
             liked_entry.save()
-            api.text_message("liked %s, likes:%d"%(textlist[1],liked_entry.likes))
+            api.text_message("You Liked %s, Now %d Likes"%(textlist[1],liked_entry.likes))
             self.gobackupload(sender_id, text)
         else:
             genre = "無"
@@ -219,7 +241,7 @@ class TocMachine(GraphMachine):
             entry = Instagrammer.objects.filter(id = textlist[0])
             if entry.exists():
                 entry = Instagrammer.objects.get(id = textlist[0])
-                api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
+                api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名哦～")
                 entry.country = country
                 entry.genre = genre
                 entry.save()

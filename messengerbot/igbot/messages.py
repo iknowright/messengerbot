@@ -62,5 +62,22 @@ messages = {
             "title":"我要貢獻",
             "payload":"contribute"
         },
-    ]
+    ],
+    "viewig_quickreply": [
+        {
+            "content_type":"text",
+            "title":"我要看馬來西亞正妹",
+            "payload":"我要看馬來西亞正妹"
+        },
+        {
+            "content_type":"text",
+            "title":"我要看最新空姐正妹",
+            "payload":"我要看最新空姐正妹"
+        },
+        {
+            "content_type":"text",
+            "title":"我要看臺灣模特兒正妹",
+            "payload":"我要看臺灣模特兒正妹"
+        },
+    ],
 }

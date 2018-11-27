@@ -64,6 +64,8 @@ class MessageAPI:
                 title = "%s %s" % (title, ig.genre)
             if not ig.country or ig.country != "無":
                 title = "%s %s" % (title, ig.country)
+            if ig.likes > 0:
+                title = "%s %d Likes" % (title, ig.likes)
             generic_template.append({
                 "title":title,
                 "image_url":ig.image_url,
@@ -110,6 +112,8 @@ class MessageAPI:
             title = "%s %s" % (title, ig.genre)
         if not ig.country or ig.country != "無":
             title = "%s %s" % (title, ig.country)
+        if ig.likes > 0:
+            title = "%s %d Likes" % (title, ig.likes)
         generic_template = [
             {
                 "title": title,
