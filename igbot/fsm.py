@@ -49,16 +49,16 @@ class TocMachine(Machine):
 
     # printdp_next
     def press_upload(self, sender_id, text):
+        print("Testing press_上傳")
         return text == "上傳"
 
     def press_again(self, sender_id, text):
+        print("Testing press_再一張")
         return text == "再一張"
 
     # instadp_next
     def press_start(self, sender_id, text):
         print("Testing press_start")
-        print(text)
-        
         return text == "開始"
 
     def press_return(self, sender_id, text):
@@ -82,6 +82,7 @@ class TocMachine(Machine):
         return image_url == "" and text != "返回"
 
     def not_return(self, sender_id, text):
+        print("Testing not_return")        
         return text != '返回'
 
     # ----------------States--------------------
@@ -99,7 +100,6 @@ class TocMachine(Machine):
     # instadp_input
     def on_enter_instadpinput(self, sender_id, text):
         api = MessageAPI(sender_id)
-        print(text)
         api.quickreply_button_message(messages['instadpinput'], messages['instadpinput_quickreply'], messages['returnlobby_button'])
 
     # printinstadp
@@ -112,11 +112,10 @@ class TocMachine(Machine):
     # instadperror
     def on_enter_instadperror(self, sender_id, text):
         api = MessageAPI(sender_id)
-        print(text)
         api.text_message("IG使用者ID有誤，請重新輸入")
         self.gobackinput(sender_id, text)
 
-    # instadperror
+    # instadserver
     def on_enter_printdpserver(self, sender_id, text):
         api = MessageAPI(sender_id)
         ig_id, url, bio = self.get_single_url()
