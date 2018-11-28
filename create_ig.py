@@ -9,51 +9,32 @@ django.setup()
 from igbot.models import Instagrammer
 
 Instagrammer.objects.all().delete()
-# image_url, bio = getImageUrl("changchaishi")
-  
-# csv file name 
-filename = "igid.csv"
-  
-# initializing the titles and rows list 
-fields = [] 
-rows = [] 
-  
-# reading csv file 
-with open(filename, 'r') as csvfile: 
-    # creating a csv reader object 
-    csvreader = csv.reader(csvfile) 
-      
-    # extracting field names through first row 
-    fields = next(csvreader) 
-  
-    # extracting each data row one by one 
-    for row in csvreader: 
-        rows.append(row) 
-  
-    # get total number of rows 
-    print("Total no. of rows: %d"%(csvreader.line_num)) 
 
-# printing the field names 
-print('Field names are:' + ', '.join(field for field in fields)) 
-
-#  printing first 5 rows 
-print('\nRows are:\n') 
-for row in rows: 
+entries = [
+    "stilleecho,清純,臺灣",
+    "cherry_quahst,模特兒,馬來西亞",
+    "wshusen,Youtuber,馬來西亞",
+    "berryying,模特兒,泰國",
+    "rockchaeeun,模特兒,韓國",
+    "qiuwen1014,模特兒,馬來西亞",
+    "bbooxlok,空姐,香港",
+    "naomineo_,模特兒,新加坡",
+    "wanna._b,模特兒,韓國",
+    "yuviaxtsayx,空姐,臺灣",
+]
+for entry in entries: 
     # parsing each column of a row 
-    id = row[0]
-    genre = row[1]
-    country = row[2]
-    # print(id+genre+country)
-    
-    image_url, bio = getImageUrl(id)
+    textlist = text.split(',')
+    print (entry)
+    image_url, bio = getImageUrl(textlist[0])
     if image_url == "":
         print("Id not found")
     else:
-        print("processing %s"%id)
+        print("processing %s"%textlist[0])
         Instagrammer.objects.create(
-            id = id,
-            genre = genre,
-            country = country,
+            id = textlist[0],
+            genre = textlist[1],
+            country = textlist[2],
             content = bio,
             url = "https://www.instagram.com/%s" % id,
             image_url = image_url
