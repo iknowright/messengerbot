@@ -17,146 +17,141 @@ from rest_framework import viewsets
 
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
-machine_flag = False
-print(machine_flag)
-if not machine_flag:
-    machine = TocMachine(
-        states=[
-            'user',
-            'lobby',
-            'instadp',
-            'instadpinput',
-            'printinstadp',
-            'instadperror',
-            'printdpserver',
-            'igviewer',
-            'iguploader',
-            'viewig',
-            'uploadprocess'
-        ],
-        transitions=[
-            {
-                'trigger': 'advance',
-                'source': 'user',
-                'dest': 'lobby',
-            },
-            {
-                'trigger': 'instadp_next',
-                'source': 'instadp',
-                'dest': 'instadpinput',
-                'conditions': 'press_start'
-            },
-            {
-                'trigger': 'instadp_next',
-                'source': 'instadp',
-                'dest': 'lobby',
-                'conditions': 'press_return'
-            },
-            {
-                'trigger': 'instadpinput_next',
-                'source': 'instadpinput',
-                'dest': 'printinstadp',
-                'conditions': 'valid_id'
-            },
-            {
-                'trigger': 'instadpinput_next',
-                'source': 'instadpinput',
-                'dest': 'instadperror',
-                'conditions': 'invalid_id'
-            },
-            {
-                'trigger': 'gobackinput',
-                'source': 'instadperror',
-                'dest': 'instadpinput',
-            },
-            {
-                'trigger': 'instadpinput_next',
-                'source': 'instadpinput',
-                'dest': 'lobby',
-                'conditions': 'press_return'
-            },
-            {
-                'trigger': 'printdp_next',
-                'source': 'printinstadp',
-                'dest': 'instadpinput',
-                'conditions': 'press_again'
-            },
-            {
-                'trigger': 'printdp_next',
-                'source': 'printinstadp',
-                'dest': 'printdpserver',
-                'conditions': 'press_upload'
-            },
-            {
-                'trigger': 'gobackinput',
-                'source': 'printdpserver',
-                'dest': 'instadpinput',
-            },
-            {
-                'trigger': 'lobby_next',
-                'source': 'lobby',
-                'dest': 'instadp',
-                'conditions': 'is_instadp'
-            },
-            {
-                'trigger': 'lobby_next',
-                'source': 'lobby',
-                'dest': 'iguploader',
-                'conditions': 'is_contribute'
-            },
-            {
-                'trigger': 'lobby_next',
-                'source': 'lobby',
-                'dest': 'igviewer',
-                'conditions': 'is_view'
-            },
-            {
-                'trigger': 'igviewer_next',
-                'source': 'igviewer',
-                'dest': 'lobby',
-                'conditions': 'press_return'
-            },
-            {
-                'trigger': 'iguploader_next',
-                'source': 'iguploader',
-                'dest': 'lobby',
-                'conditions': 'press_return'
-            },
-            {
-                'trigger': 'igviewer_next',
-                'source': 'igviewer',
-                'dest': 'viewig',
-                'conditions': 'not_return'
-            },
-            {
-                'trigger':'gobackupload',
-                'source': 'uploadprocess',
-                'dest': 'iguploader',
-            },
-            {
-                'trigger': 'iguploader_next',
-                'source': 'iguploader',
-                'dest': 'uploadprocess',
-            },
-            {
-                'trigger': 'view_next',
-                'source': 'viewig',
-                'dest': 'viewig',
-                'conditions': 'not_return'
-            },
-            {
-                'trigger': 'view_next',
-                'source': 'viewig',
-                'dest': 'lobby',
-                'conditions': 'press_return'
-            },
-        ],
-        initial='user',
-        auto_transitions=False,
-    )
-    machine_flag = True
-print(machine_flag)
-
+machine = TocMachine(
+    states=[
+        'user',
+        'lobby',
+        'instadp',
+        'instadpinput',
+        'printinstadp',
+        'instadperror',
+        'printdpserver',
+        'igviewer',
+        'iguploader',
+        'viewig',
+        'uploadprocess'
+    ],
+    transitions=[
+        {
+            'trigger': 'advance',
+            'source': 'user',
+            'dest': 'lobby',
+        },
+        {
+            'trigger': 'instadp_next',
+            'source': 'instadp',
+            'dest': 'instadpinput',
+            'conditions': 'press_start'
+        },
+        {
+            'trigger': 'instadp_next',
+            'source': 'instadp',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
+        {
+            'trigger': 'instadpinput_next',
+            'source': 'instadpinput',
+            'dest': 'printinstadp',
+            'conditions': 'valid_id'
+        },
+        {
+            'trigger': 'instadpinput_next',
+            'source': 'instadpinput',
+            'dest': 'instadperror',
+            'conditions': 'invalid_id'
+        },
+        {
+            'trigger': 'gobackinput',
+            'source': 'instadperror',
+            'dest': 'instadpinput',
+        },
+        {
+            'trigger': 'instadpinput_next',
+            'source': 'instadpinput',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
+        {
+            'trigger': 'printdp_next',
+            'source': 'printinstadp',
+            'dest': 'instadpinput',
+            'conditions': 'press_again'
+        },
+        {
+            'trigger': 'printdp_next',
+            'source': 'printinstadp',
+            'dest': 'printdpserver',
+            'conditions': 'press_upload'
+        },
+        {
+            'trigger': 'gobackinput',
+            'source': 'printdpserver',
+            'dest': 'instadpinput',
+        },
+        {
+            'trigger': 'lobby_next',
+            'source': 'lobby',
+            'dest': 'instadp',
+            'conditions': 'is_instadp'
+        },
+        {
+            'trigger': 'lobby_next',
+            'source': 'lobby',
+            'dest': 'iguploader',
+            'conditions': 'is_contribute'
+        },
+        {
+            'trigger': 'lobby_next',
+            'source': 'lobby',
+            'dest': 'igviewer',
+            'conditions': 'is_view'
+        },
+        {
+            'trigger': 'igviewer_next',
+            'source': 'igviewer',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
+        {
+            'trigger': 'iguploader_next',
+            'source': 'iguploader',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
+        {
+            'trigger': 'igviewer_next',
+            'source': 'igviewer',
+            'dest': 'viewig',
+            'conditions': 'not_return'
+        },
+        {
+            'trigger':'gobackupload',
+            'source': 'uploadprocess',
+            'dest': 'iguploader',
+        },
+        {
+            'trigger': 'iguploader_next',
+            'source': 'iguploader',
+            'dest': 'uploadprocess',
+        },
+        {
+            'trigger': 'view_next',
+            'source': 'viewig',
+            'dest': 'viewig',
+            'conditions': 'not_return'
+        },
+        {
+            'trigger': 'view_next',
+            'source': 'viewig',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
+    ],
+    initial='user',
+    auto_transitions=False,
+)
+machine_flag = True
 
 # Handle messages events
 def handleMessage(event):
@@ -172,24 +167,23 @@ def handleMessage(event):
 
 # Handle State Trigger
 def handleTrigger(state, send_id, text):
-    if machine_flag:
-        print("Server Handling State : %s" % state)
-        if state == "user":
-            machine.advance(send_id, text)
-        if state == "instadp":
-            machine.instadp_next(send_id, text)
-        if state == "instadpinput":
-            machine.instadpinput_next(send_id, text)
-        if state == "printinstadp":
-            machine.printdp_next(send_id, text)
-        if state == "lobby":
-            machine.lobby_next(send_id, text)
-        if state == "igviewer":
-            machine.igviewer_next(send_id, text)
-        if state == "iguploader":
-            machine.iguploader_next(send_id, text)
-        if state == "viewig":
-            machine.view_next(send_id, text)
+    print("Server Handling State : %s" % state)
+    if state == "user":
+        machine.advance(send_id, text)
+    if state == "instadp":
+        machine.instadp_next(send_id, text)
+    if state == "instadpinput":
+        machine.instadpinput_next(send_id, text)
+    if state == "printinstadp":
+        machine.printdp_next(send_id, text)
+    if state == "lobby":
+        machine.lobby_next(send_id, text)
+    if state == "igviewer":
+        machine.igviewer_next(send_id, text)
+    if state == "iguploader":
+        machine.iguploader_next(send_id, text)
+    if state == "viewig":
+        machine.view_next(send_id, text)
 
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
@@ -212,7 +206,6 @@ class IgBotView(generic.View):
             # will only ever contain one event, so we get index 0
             print("\n\n<-------------Start of Githook Content------------->")
             print(body)
-            print(machine_flag)
             print("<-------------End of Githook Content------------->")
             entry = body['entry'][0]
             # Gets the body of the webhook event
