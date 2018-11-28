@@ -110,12 +110,19 @@ class TocMachine(Machine):
 
     # printinstadp
     def on_enter_printinstadp(self, sender_id, text):
+        api = MessageAPI(sender_id)
         print("------------")
         print("im at on_enter_printinstadp")
-        api = MessageAPI(sender_id)
-        ig_id, url, bio = self.get_single_url()
-        api.image_message(url)
-        api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
+        textlist = text.split(' ')
+        if textlist[0] == 'payload_like':
+            liked_entry = Instagrammer.objects.get(id=textlist[1])
+            liked_entry.likes += 1
+            liked_entry.save()
+            api.text_message("You Liked %s, Now %d Likes"%(textlist[1],liked_entry.likes))
+        else:
+            ig_id, url, bio = self.get_single_url()
+            api.image_message(url)
+            api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
 
     # instadperror
     def on_enter_instadperror(self, sender_id, text):
