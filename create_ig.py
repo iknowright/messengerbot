@@ -24,7 +24,7 @@ entries = [
 ]
 for entry in entries: 
     # parsing each column of a row 
-    textlist = text.split(',')
+    textlist = entry.split(',')
     print (entry)
     image_url, bio = getImageUrl(textlist[0])
     if image_url == "":
