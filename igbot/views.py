@@ -173,24 +173,23 @@ def handleMessage(event):
 
 # Handle State Trigger
 def handleTrigger(state, send_id, text):
-    if machine_flag:
-        print("Server Handling State : %s" % state)
-        if state == "user":
-            machine.advance(send_id, text)
-        if state == "instadp":
-            machine.instadp_next(send_id, text)
-        if state == "instadpinput":
-            machine.instadpinput_next(send_id, text)
-        if state == "printinstadp":
-            machine.printdp_next(send_id, text)
-        if state == "lobby":
-            machine.lobby_next(send_id, text)
-        if state == "igviewer":
-            machine.igviewer_next(send_id, text)
-        if state == "iguploader":
-            machine.iguploader_next(send_id, text)
-        if state == "viewig":
-            machine.view_next(send_id, text)
+    print("Server Handling State : %s" % state)
+    if state == "user":
+        machine.advance(send_id, text)
+    if state == "instadp":
+        machine.instadp_next(send_id, text)
+    if state == "instadpinput":
+        machine.instadpinput_next(send_id, text)
+    if state == "printinstadp":
+        machine.printdp_next(send_id, text)
+    if state == "lobby":
+        machine.lobby_next(send_id, text)
+    if state == "igviewer":
+        machine.igviewer_next(send_id, text)
+    if state == "iguploader":
+        machine.iguploader_next(send_id, text)
+    if state == "viewig":
+        machine.view_next(send_id, text)
 
 # Create your views here.
 def show_fsm(self):
