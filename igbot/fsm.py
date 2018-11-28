@@ -89,21 +89,29 @@ class TocMachine(Machine):
 
     # Lobby
     def on_enter_lobby(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_lobby")
         api = MessageAPI(sender_id)
         api.button_message(messages['lobby'], messages['lobby_button'])
     
     # instadp
     def on_enter_instadp(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_instadp")
         api = MessageAPI(sender_id)
         api.button_message(messages['instadp'], messages['instadp_button'])
 
     # instadp_input
     def on_enter_instadpinput(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_lobby")
         api = MessageAPI(sender_id)
         api.quickreply_button_message(messages['instadpinput'], messages['instadpinput_quickreply'], messages['returnlobby_button'])
 
     # printinstadp
     def on_enter_printinstadp(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_printinstadp")
         api = MessageAPI(sender_id)
         ig_id, url, bio = self.get_single_url()
         api.image_message(url)
@@ -111,12 +119,16 @@ class TocMachine(Machine):
 
     # instadperror
     def on_enter_instadperror(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_instadperror")
         api = MessageAPI(sender_id)
         api.text_message("IG使用者ID有誤，請重新輸入")
         self.gobackinput(sender_id, text)
 
     # instadserver
     def on_enter_printdpserver(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_printdpserver")
         api = MessageAPI(sender_id)
         ig_id, url, bio = self.get_single_url()
         entry = Instagrammer.objects.filter(id = ig_id)
@@ -138,6 +150,8 @@ class TocMachine(Machine):
 
     # Igviewer
     def on_enter_igviewer(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_igviewer")
         api = MessageAPI(sender_id)
         genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
         genrelist = ""
@@ -154,10 +168,14 @@ class TocMachine(Machine):
 
     # Iguploader
     def on_enter_iguploader(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_iguploader")
         api = MessageAPI(sender_id)
         api.button_message("上傳格式: ig_id [分類] [國家] \n（以空白爲分割，中括號爲選項)\n 例: changchaishi 小編 臺灣", messages['returnlobby_button'])
         
     def on_enter_viewig(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_viewig")
         api = MessageAPI(sender_id)
         textlist = text.split(' ')
         if textlist[0] == "payload_like":
@@ -217,6 +235,8 @@ class TocMachine(Machine):
             
 
     def on_enter_uploadprocess(self, sender_id, text):
+        print("------------")
+        print("im at on_enter_uploadprocess")
         api = MessageAPI(sender_id)
         textlist = text.split(' ')
         if len(textlist) >= 4 or len(textlist) == 0:
