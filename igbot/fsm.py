@@ -25,7 +25,7 @@ class TocMachine(Machine):
         self.ig_id = ig_id
     
     def get_single_url(self):
-        return self.ig_id, self.url
+        return self.ig_id, self.url, self.bio
 
     def set_command(self, valid = False):
         self.valid = valid
@@ -105,7 +105,7 @@ class TocMachine(Machine):
     # printinstadp
     def on_enter_printinstadp(self, sender_id, text):
         api = MessageAPI(sender_id)
-        ig_id, url = self.get_single_url()
+        ig_id, url, bio = self.get_single_url()
         api.image_message(url)
         api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
 
