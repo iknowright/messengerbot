@@ -163,12 +163,12 @@ class TocMachine(Machine):
         genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
         genrelist = ""
         for entry in genres:
-            if not entry['genre'] or entry['genre'] == '無':
+            if not entry['genre'] or entry['genre'] != '無':
                 genrelist = "%s\n%s" % (genrelist,entry['genre'])
         countries = Instagrammer.objects.order_by('country').values('country').distinct()
         countrylist = ""
         for entry in countries:
-            if not entry['country'] or entry['country'] == '無':
+            if not entry['country'] or entry['country'] != '無':
                 countrylist = "%s\n%s" % (countrylist, entry['country'])
         print(genrelist)
         print(countrylist)
