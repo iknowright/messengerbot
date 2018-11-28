@@ -143,14 +143,16 @@ class TocMachine(GraphMachine):
         genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
         genrelist = ""
         for entry in genres:
-            genrelist = "%s\n%s" % (genrelist,entry['genre'])
+            if not entry['genre'] or entry['genre'] != '無':
+                genrelist = "%s\n%s" % (genrelist,entry['genre'])
         countries = Instagrammer.objects.order_by('country').values('country').distinct()
         countrylist = ""
         for entry in countries:
-            countrylist = "%s\n%s" % (countrylist, entry['country'])
+            if not entry['country'] or entry['country'] != '無':
+                countrylist = "%s\n%s" % (countrylist, entry['country'])
         print(genrelist)
         print(countrylist)
-        api.button_message("輸入搜尋關鍵字\n\"我要看[關鍵字]正妹\"\n\n特殊關鍵字[一項]:\n熱門（Order By Likes)\n最新(Order By Create Date)\n\n類別關鍵字[一項]:%s\n\n國家關鍵字[一項]:%s" % (genrelist, countrylist), messages['returnlobby_button'])        
+        api.button_message("輸入搜尋關鍵字\n\"我要看[關鍵字]正妹\"\n\n特殊關鍵字[一項]:\n熱門（Order By Likes)\n最新(Order By Create Date)\n\n類別關鍵字[一項]:%s\n國家關鍵字[一項]:%s" % (genrelist, countrylist), messages['returnlobby_button'])        
         api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])
 
     # Iguploader
