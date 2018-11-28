@@ -167,8 +167,8 @@ class TocMachine(GraphMachine):
             liked_entry = Instagrammer.objects.get(id=textlist[1])
             liked_entry.likes += 1
             liked_entry.save()
-            api.text_message("liked %s, likes:%d"%(textlist[1],liked_entry.likes))
-            api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])            
+            api.text_message("You Liked %s, Now %dLikes "%(textlist[1],liked_entry.likes))
+            api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])            
         elif len(text) < 5 or not (text[0] == '我' and text[1] == '要' and text[2] == '看' and text[-2] == '正' and text[-1] == '妹'):
             api.text_message("格式錯誤請重新再試")
         else:
@@ -216,7 +216,7 @@ class TocMachine(GraphMachine):
                 filterig = filterig.order_by('likes')
             api.profileTemplates(filterig)
             api.text_message(keyword)
-            api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])
+            api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
             
 
     def on_enter_uploadprocess(self, sender_id, text):

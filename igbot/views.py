@@ -147,6 +147,12 @@ machine = TocMachine(
             'dest': 'lobby',
             'conditions': 'press_return'
         },
+        {
+            'trigger': 'printdp_next',
+            'source': 'printinstadp',
+            'dest': 'lobby',
+            'conditions': 'press_return'
+        },
     ],
     initial='user',
     auto_transitions=False,
