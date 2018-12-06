@@ -18,6 +18,7 @@ from rest_framework import viewsets
 from igbot.machine_params import machineSet
 
 import io
+from PIL import Image
 
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
@@ -66,7 +67,10 @@ def show_fsm(self):
     elif "graph" in machine:
         stream = io.BytesIO()
         machine["graph"].get_graph().draw(stream, prog='dot', format='png')
-        return HttpResponse(stream, mimetype="image/png")
+        image = Image.open(io.BytesIO(stream))
+        response = HttpResponse(mimetype="image/png")
+        image.save(response, "PNG")
+        return response
     else:
         return HttpResponse("no machine")
         
