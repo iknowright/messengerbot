@@ -1,4 +1,4 @@
-from transitions import Machine
+from transitions.extensions import GraphMachine
 from igbot.messageAPI import MessageAPI
 from igbot.models import Instagrammer
 from igbot.messages import *
@@ -9,10 +9,10 @@ import operator
 singleIgUrl = ""
 post_url = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=%s" % ACCESS_TOKEN
 
-class TocMachine(Machine):
+class TocMachine(GraphMachine):
 
     def __init__(self, **machine_configs):
-        self.machine = Machine(
+        self.machine = GraphMachine(
             model=self,
             **machine_configs
         )
