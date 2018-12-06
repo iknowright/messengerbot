@@ -65,8 +65,8 @@ def show_fsm(self):
             auto_transitions=machineSet["auto_transitions"],
         )
     stream = io.BytesIO()
-    machine["graph"].get_graph().draw(stream, prog='dot')
-    return HttpResponse(Image(stream.getvalue()), mimetype="image/png")
+    machine["graph"].get_graph().draw('fsm.png', prog='dot', format='png')
+    return HttpResponse(Image.open("fsm.png","r"), mimetype="image/png")
         
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
