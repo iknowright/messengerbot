@@ -50,7 +50,7 @@ def getImageUrl(instagram_id):
 
     r = requests.get(file_url, stream=True)
     if r.ok:
-        n = requests.post("https://api.imgur.com/3/image", headers={"Authorization": "Bearer %s" % IMGUR_ACESS_TOKEN}, data={"image":r.content})
+        n = requests.post("https://api.imgur.com/3/image", headers={"Authorization": "Bearer %s" % IMGUR_ACCESS_TOKEN}, data={"image":r.content})
         response = n.json()
         # print("\033[92m✔ Image save:\033[0m {}".format(response['data']['link']))
         # print("biography: %s" % biography)

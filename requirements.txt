@@ -16,4 +16,12 @@ psycopg2-binary==2.7.5
 imgurpython
 gunicorn
 django-heroku
+<<<<<<< HEAD
 transitions
+=======
+transitions
+dj_database_url
+graphviz
+pygraphviz
+pillow
+>>>>>>> heroku

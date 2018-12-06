@@ -15,149 +15,14 @@ from igbot.serializers import InstagrammerSerializer
 
 from rest_framework import viewsets
 
+from igbot.machine_params import machineSet
+
+import io
+from PIL import Image
+
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
-machine = TocMachine(
-    states=[
-        'user',
-        'lobby',
-        'instadp',
-        'instadpinput',
-        'printinstadp',
-        'instadperror',
-        'printdpserver',
-        'igviewer',
-        'iguploader',
-        'viewig',
-        'uploadprocess'
-    ],
-    transitions=[
-        {
-            'trigger': 'advance',
-            'source': 'user',
-            'dest': 'lobby',
-        },
-        {
-            'trigger': 'instadp_next',
-            'source': 'instadp',
-            'dest': 'instadpinput',
-            'conditions': 'press_start'
-        },
-        {
-            'trigger': 'instadp_next',
-            'source': 'instadp',
-            'dest': 'lobby',
-            'conditions': 'press_return'
-        },
-        {
-            'trigger': 'instadpinput_next',
-            'source': 'instadpinput',
-            'dest': 'printinstadp',
-            'conditions': 'valid_id'
-        },
-        {
-            'trigger': 'instadpinput_next',
-            'source': 'instadpinput',
-            'dest': 'instadperror',
-            'conditions': 'invalid_id'
-        },
-        {
-            'trigger': 'gobackinput',
-            'source': 'instadperror',
-            'dest': 'instadpinput',
-        },
-        {
-            'trigger': 'instadpinput_next',
-            'source': 'instadpinput',
-            'dest': 'lobby',
-            'conditions': 'press_return'
-        },
-        {
-            'trigger': 'printdp_next',
-            'source': 'printinstadp',
-            'dest': 'instadpinput',
-            'conditions': 'press_again'
-        },
-        {
-            'trigger': 'printdp_next',
-            'source': 'printinstadp',
-            'dest': 'printdpserver',
-            'conditions': 'press_upload'
-        },
-        {
-            'trigger': 'gobackinput',
-            'source': 'printdpserver',
-            'dest': 'instadpinput',
-        },
-        {
-            'trigger': 'lobby_next',
-            'source': 'lobby',
-            'dest': 'instadp',
-            'conditions': 'is_instadp'
-        },
-        {
-            'trigger': 'lobby_next',
-            'source': 'lobby',
-            'dest': 'iguploader',
-            'conditions': 'is_contribute'
-        },
-        {
-            'trigger': 'lobby_next',
-            'source': 'lobby',
-            'dest': 'igviewer',
-            'conditions': 'is_view'
-        },
-        {
-            'trigger': 'igviewer_next',
-            'source': 'igviewer',
-            'dest': 'lobby',
-            'conditions': 'press_return'
-        },
-        {
-            'trigger': 'iguploader_next',
-            'source': 'iguploader',
-            'dest': 'lobby',
-            'conditions': 'press_return'
-        },
-        {
-            'trigger': 'igviewer_next',
-            'source': 'igviewer',
-            'dest': 'viewig',
-            'conditions': 'not_return'
-        },
-        {
-            'trigger':'gobackupload',
-            'source': 'uploadprocess',
-            'dest': 'iguploader',
-        },
-        {
-            'trigger': 'iguploader_next',
-            'source': 'iguploader',
-            'dest': 'uploadprocess',
-        },
-        {
-            'trigger': 'view_next',
-            'source': 'viewig',
-            'dest': 'viewig',
-            'conditions': 'not_return'
-        },
-        {
-            'trigger': 'view_next',
-            'source': 'viewig',
-            'dest': 'lobby',
-            'conditions': 'press_return'
-        },
-        {
-            'trigger': 'printdp_next',
-            'source': 'printinstadp',
-            'dest': 'lobby',
-            'conditions': 'press_return'
-        },
-    ],
-    initial='user',
-    auto_transitions=False,
-    show_conditions=True,
-)
+machine = {}
 
 # Handle messages events
 def handleMessage(event):
@@ -175,27 +40,32 @@ def handleMessage(event):
 def handleTrigger(state, send_id, text):
     print("Server Handling State : %s" % state)
     if state == "user":
-        machine.advance(send_id, text)
+        machine[send_id].advance(send_id, text)
     if state == "instadp":
-        machine.instadp_next(send_id, text)
+        machine[send_id].instadp_next(send_id, text)
     if state == "instadpinput":
-        machine.instadpinput_next(send_id, text)
+        machine[send_id].instadpinput_next(send_id, text)
     if state == "printinstadp":
-        machine.printdp_next(send_id, text)
+        machine[send_id].printdp_next(send_id, text)
     if state == "lobby":
-        machine.lobby_next(send_id, text)
+        machine[send_id].lobby_next(send_id, text)
     if state == "igviewer":
-        machine.igviewer_next(send_id, text)
+        machine[send_id].igviewer_next(send_id, text)
     if state == "iguploader":
-        machine.iguploader_next(send_id, text)
+        machine[send_id].iguploader_next(send_id, text)
     if state == "viewig":
-        machine.view_next(send_id, text)
+        machine[send_id].view_next(send_id, text)
 
-# Create your views here.
 def show_fsm(self):
-    machine.get_graph().draw('fsm.png', prog='dot', format='png')
-    return HttpResponse()
-
+    if "graph" not in machine:
+        machine["graph"] = TocMachine(
+            states=machineSet["states"],
+            transitions=machineSet["transitions"],
+            initial=machineSet["initial"],
+            auto_transitions=machineSet["auto_transitions"],
+        )
+    machine["graph"].get_graph().draw('fsm.png', prog='dot', format='png')
+        
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
     def get(self, request, *args, **kwargs):
@@ -211,6 +81,7 @@ class IgBotView(generic.View):
             
     def post(self, request, *args, **kwargs):
         body = json.loads(self.request.body.decode('utf-8'))
+        # print (body)
         if body['object'] == 'page': 
             # Get the webhook event. entry.messaging is an array, but 
             # will only ever contain one event, so we get index 0
@@ -223,8 +94,14 @@ class IgBotView(generic.View):
                 webhook_event = entry['messaging'][0]
                 text = handleMessage(webhook_event)
                 sender_id = webhook_event['sender']['id']
-
-                handleTrigger(machine.state, sender_id, text)
+                if sender_id not in machine:
+                    machine[sender_id] = TocMachine(
+                        states=machineSet["states"],
+                        transitions=machineSet["transitions"],
+                        initial=machineSet["initial"],
+                        auto_transitions=machineSet["auto_transitions"],
+                    )
+                handleTrigger(machine[sender_id].state, sender_id, text)
             return HttpResponse()
         else :
             return HttpResponse()
