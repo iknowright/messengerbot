@@ -238,10 +238,11 @@ class TocMachine(Machine):
             if text.find('最新'):
                 filterig = filterig.order_by('create_at')
                 keyword = "關鍵字: 最新 %s | %d筆" % (keyword, len(filterig))
-            if text.find('推薦'):
+            elif text.find('推薦'):
                 filterig = filterig.order_by('likes')
                 keyword = "關鍵字: 推薦 %s | %d筆" % (keyword, len(filterig))
-            keyword = "關鍵字: %s | %d筆" % (keyword, len(filterig))
+            else:
+                keyword = "關鍵字: %s | %d筆" % (keyword, len(filterig))
             api.profileTemplates(filterig)
             api.text_message(keyword)
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
