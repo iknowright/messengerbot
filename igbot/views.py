@@ -64,15 +64,12 @@ def show_fsm(self):
             initial=machineSet["initial"],
             auto_transitions=machineSet["auto_transitions"],
         )
-    elif "graph" in machine:
-        stream = io.BytesIO()
-        machine["graph"].get_graph().draw(stream, prog='dot', format='png')
-        image = Image.open(io.BytesIO(stream))
-        response = HttpResponse(mimetype="image/png")
-        image.save(response, "PNG")
-        return response
-    else:
-        return HttpResponse("no machine")
+    stream = io.BytesIO()
+    machine["graph"].get_graph().draw(stream, prog='dot', format='png')
+    image = Image.open(io.BytesIO(stream))
+    response = HttpResponse(mimetype="image/png")
+    image.save(response, "PNG")
+    return response
         
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
