@@ -104,9 +104,15 @@ class TocMachine(GraphMachine):
     # instadp_input
     def on_enter_instadpinput(self, sender_id, text):
         print("------------")
-        print("im at on_enter_lobby")
+        print("im at on_enter_instadpinput")
         api = MessageAPI(sender_id)
-        api.quickreply_button_message(messages['instadpinput'], messages['instadpinput_quickreply'], messages['returnlobby_button'])
+        if textlist[0] == 'payload_like':
+            liked_entry = Instagrammer.objects.get(id=textlist[1])
+            liked_entry.likes += 1
+            liked_entry.save()
+            api.text_message("You Liked %s, Now %d Likes"%(textlist[1],liked_entry.likes))
+        else:
+            api.quickreply_button_message(messages['instadpinput'], messages['instadpinput_quickreply'], messages['returnlobby_button'])
 
     # printinstadp
     def on_enter_printinstadp(self, sender_id, text):
