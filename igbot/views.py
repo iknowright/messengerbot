@@ -65,7 +65,7 @@ def show_fsm(self):
             auto_transitions=machineSet["auto_transitions"],
         )
     stream = io.BytesIO()
-    machine["graph"].get_graph().draw(stream, prog='dot', format='png')
+    machine["graph"].get_graph().draw(stream, prog='dot')
     image = Image.open(io.BytesIO(stream))
     return HttpResponse(image, mimetype="image/png")
         
