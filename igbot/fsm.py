@@ -174,7 +174,7 @@ class TocMachine(Machine):
                 countrylist = "%s\n%s" % (countrylist, entry['country'])
         print(genrelist)
         print(countrylist)
-        api.button_message("目前資料庫共有 %d 資料!\n輸入搜尋關鍵字\n\"我要看[關鍵字]正妹\"\n\n特殊關鍵字[一項]:\n熱門（Order By Likes)\n最新(Order By Create Date)\n\n類別關鍵字[一項]:%s\n國家關鍵字[一項]:%s" % (totalnumber, genrelist, countrylist), messages['returnlobby_button'])        
+        api.button_message("目前資料庫共有 %d 資料!\n輸入搜尋關鍵字\n\"我要看[關鍵字]正妹\"\n\n特殊關鍵字[一項]:\n熱門（Order By Likes)\n最新(Order By Create Date)\n\n類別關鍵字[一項]:%s\n\n國家關鍵字[一項]:%s" % (totalnumber, genrelist, countrylist), messages['returnlobby_button'])        
         api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])
 
     # Iguploader
@@ -235,11 +235,13 @@ class TocMachine(Machine):
                 else:
                     filterig = filterig.filter(country = country_taken).filter(genre = genre_taken)
                     keyword = "%s %s" % (country_taken, genre_taken)
-            keyword = "關鍵字: %s | %d筆" % (keyword, len(filterig))
             if text.find('最新'):
                 filterig = filterig.order_by('create_at')
+                keyword = "關鍵字: 最新 %s | %d筆" % (keyword, len(filterig))
             if text.find('推薦'):
                 filterig = filterig.order_by('likes')
+                keyword = "關鍵字: 推薦 %s | %d筆" % (keyword, len(filterig))
+            keyword = "關鍵字: %s | %d筆" % (keyword, len(filterig))
             api.profileTemplates(filterig)
             api.text_message(keyword)
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
