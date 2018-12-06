@@ -106,6 +106,7 @@ class TocMachine(GraphMachine):
         print("------------")
         print("im at on_enter_instadpinput")
         api = MessageAPI(sender_id)
+        textlist = text.split(' ')
         if textlist[0] == 'payload_like':
             liked_entry = Instagrammer.objects.get(id=textlist[1])
             liked_entry.likes += 1
