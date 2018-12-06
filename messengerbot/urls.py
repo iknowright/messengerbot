@@ -29,4 +29,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url('callback/', IgBotView.as_view()),
     url(r'^api/',include(router.urls)),
+    url(r'^showfsm/$', views.show_fsm),
 ]

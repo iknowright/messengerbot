@@ -17,6 +17,8 @@ from rest_framework import viewsets
 
 from igbot.machine_params import machineSet
 
+import io
+
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
 machine = {}
@@ -53,6 +55,21 @@ def handleTrigger(state, send_id, text):
     if state == "viewig":
         machine[send_id].view_next(send_id, text)
 
+def show_fsm(self):
+    if "graph" not in machine:
+        machine["graph"] = TocMachine(
+            states=machineSet["states"],
+            transitions=machineSet["transitions"],
+            initial=machineSet["initial"],
+            auto_transitions=machineSet["auto_transitions"],
+        )
+    elif "graph" in machine:
+        stream = io.BytesIO()
+        image_data = machine["graph"].get_graph().draw(stream, prog='dot', format='png')
+        return HttpResponse(image_data, mimetype="image/png")
+    else:
+        return HttpResponse("no machine")
+        
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
     def get(self, request, *args, **kwargs):
