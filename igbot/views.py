@@ -65,8 +65,8 @@ def show_fsm(self):
         )
     elif "graph" in machine:
         stream = io.BytesIO()
-        image_data = machine["graph"].get_graph().draw(stream, prog='dot', format='png')
-        return HttpResponse(image_data, mimetype="image/png")
+        machine["graph"].get_graph().draw(stream, prog='dot', format='png')
+        return HttpResponse(stream, mimetype="image/png")
     else:
         return HttpResponse("no machine")
         
