@@ -67,9 +67,7 @@ def show_fsm(self):
     stream = io.BytesIO()
     machine["graph"].get_graph().draw(stream, prog='dot', format='png')
     image = Image.open(io.BytesIO(stream))
-    response = HttpResponse(mimetype="image/png")
-    image.save(response, "PNG")
-    return response
+    return HttpResponse(image, mimetype="image/png")
         
 class IgBotView(generic.View):
     # To callback Webhook, the only GET request that webhook sent to here 
