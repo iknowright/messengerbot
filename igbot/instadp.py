@@ -59,7 +59,6 @@
 #     else:
 #         print("Cannot make connection to download image")
 #         return "", ""
-from bs4 import BeautifulSoup
 import requests
 import re
 def getImageUrl(instagram_id):
