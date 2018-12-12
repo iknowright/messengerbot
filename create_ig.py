@@ -36,6 +36,6 @@ for entry in entries:
             genre = textlist[1],
             country = textlist[2],
             content = bio,
-            url = "https://www.instagram.com/%s" % id,
+            url = "https://www.instagram.com/%s" % textlist[0],
             image_url = image_url
         )
