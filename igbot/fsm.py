@@ -181,7 +181,7 @@ class TocMachine(GraphMachine):
                 countrylist = "%s\n%s" % (countrylist, entry['country'])
         print(genrelist)
         print(countrylist)
-        api.button_message("目前資料庫共有 %d 資料!\n輸入搜尋關鍵字\n\"我要看[關鍵字]正妹\"\n\n特殊關鍵字[一項]:\n熱門（Order By Likes)\n最新(Order By Create Date)\n\n類別關鍵字[一項]:%s\n\n國家關鍵字[一項]:%s" % (totalnumber, genrelist, countrylist), messages['returnlobby_button'])
+        api.button_message("目前資料庫共有 %d 資料!\n輸入搜尋關鍵字\n\"我要看[關鍵字]正妹\"\n\n特殊關鍵字[一項]:\n熱門（Order By Likes)\n最新(Order By Create Date)\n\n類別關鍵字[一項]:%s\n\n國家關鍵字[一項]:%s" % (totalnumber, genrelist, countrylist), messages['returnlobby_button'])        
         api.quickreply_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'])
 
     # Iguploader
