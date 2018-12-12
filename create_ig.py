@@ -27,15 +27,12 @@ for entry in entries:
     textlist = entry.split(',')
     print (entry)
     image_url, bio = getImageUrl(textlist[0])
-    if image_url == "":
-        print("Id not found")
-    else:
-        print("processing %s"%textlist[0])
-        Instagrammer.objects.create(
-            id = textlist[0],
-            genre = textlist[1],
-            country = textlist[2],
-            content = bio,
-            url = "https://www.instagram.com/%s" % textlist[0],
-            image_url = image_url
-        )
+    print("processing %s"%textlist[0])
+    Instagrammer.objects.create(
+        id = textlist[0],
+        genre = textlist[1],
+        country = textlist[2],
+        content = bio,
+        url = "https://www.instagram.com/%s" % textlist[0],
+        image_url = image_url
+    )
