@@ -214,6 +214,7 @@ class TocMachine(GraphMachine):
             list_start, query_ig = self.get_current_query()
             keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + 10)
             list_name = ""
+            print("hi")
             for item in query_ig:
                 list_name = "%s%s\n" % (list_name, item.id)
             api.text_message(keyword + list_name)
