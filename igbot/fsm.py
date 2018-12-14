@@ -232,7 +232,7 @@ class TocMachine(GraphMachine):
                 has_next = True
                 ig_to_show = query_ig[:end]
                 ig_rest = query_ig[end:]
-                self.set_current_query(list_len, list_start + 10, ig_rest)
+                self.set_current_query(list_start + 10, ig_rest)
             else :
                 ig_to_show = query_ig[:end]
             api.profileTemplates(ig_to_show)
