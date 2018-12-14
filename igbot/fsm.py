@@ -34,10 +34,9 @@ class TocMachine(GraphMachine):
     def get_command(self):
         return self.valid
 
-    def set_current_query(self, list_len = 0,start = "", end = "", entry = None):
+    def set_current_query(self, list_len = 0,start = 0, entry = None):
         self.list_len = list_len
         self.start = start
-        self.end = end
         self.entry = entry
     
     def get_current_query(self):
@@ -214,8 +213,39 @@ class TocMachine(GraphMachine):
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])            
         elif len(text) < 5 or not (text[0] == '我' and text[1] == '要' and text[2] == '看' and text[-2] == '正' and text[-1] == '妹'):
             api.text_message("格式錯誤請重新再試")
+        elif text == "postback_list_only":
+            list_len, list_start, query_ig = self.get_current_query()
+            keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + 10)
+            list_name = ""
+            for item in query_ig:
+                list_name = "%s%s\n" % (list_name, item.id)
+            api.text_message(keyword + list_name)
+            api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
+        elif text == "postback_find":
+            self.set_current_query(0,0,None)
+            api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
+        elif text == "postback_more":
+            list_len, list_start, query_ig = self.get_current_query()
+            new_len = len(filterig)
+            has_next = False
+            end = new_len
+            if new_len > 10:
+                end = 10
+                has_next = True
+                ig_to_show = query_ig[:end]
+                ig_rest = query_ig[end:]
+                self.set_current_query(list_len, list_start + 10, ig_rest)
+            else :
+                ig_to_show = query_ig[:end]
+            api.profileTemplates(ig_to_show)
+            if has_next:
+                keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + 10)
+                api.button_message(keyword,messages['view_option_button'])
+            else :
+                keyword = "顯示 %d ~ %d 筆正妹, 結束" % (list_start + 1, list_start + new_len)
+                api.button_message(keyword,messages['view_option_button_return_only'])
         else:
-            self.set_current_query(0,0,0,None)
+            self.set_current_query(0,0,None)
             genres = Instagrammer.objects.order_by('genre').values('genre').distinct()
             countries = Instagrammer.objects.order_by('country').values('country').distinct()
             genre_taken = ""
@@ -263,15 +293,23 @@ class TocMachine(GraphMachine):
                 keyword = "最新 %s" % keyword
             list_len = len(filterig)
             start = 0
-            if list_len > 10:
-                end = 10 
+            has_next = False
             end = list_len
-            keyword = "關鍵字: %s | %d筆\n 顯示 %d ~ %d 筆正妹" % (keyword, list_len, start + 1, end)
-            ig_to_show = filterig[start:end]
-            ig_rest = filterig[end:]
-            self.set_current_query(list_len,start,end, ig_rest)
+            if list_len > 10:
+                end = 10
+                has_next = True
+                ig_to_show = filterig[:end]
+                ig_rest = filterig[end:]
+                self.set_current_query(list_len, start + 10, ig_rest)
+            else :
+                ig_to_show = filterig[:end]
             api.profileTemplates(ig_to_show)
-            api.text_message(keyword)
+            if has_next:
+                keyword = "關鍵字: %s | %d筆\n顯示 1 ~ 10 筆正妹" % (keyword, list_len)
+                api.button_message(keyword,messages['view_option_button_advance'])
+            else :
+                keyword = "關鍵字: %s | %d筆" % (keyword, list_len)
+                api.text_message(keyword)
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
             
 
