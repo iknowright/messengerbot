@@ -34,13 +34,14 @@ class TocMachine(GraphMachine):
     def get_command(self):
         return self.valid
 
-    def set_current_query(self, list_len = 0,start = "", end = ""):
+    def set_current_query(self, list_len = 0,start = "", end = "", entry = None):
         self.list_len = list_len
         self.start = start
         self.end = end
+        self.entry = entry
     
     def get_current_query(self):
-        return self.list_len, self.start, self.end
+        return self.list_len, self.start, self.end, self.entry
 
     # ----------------Conditions--------------------
     # advance
@@ -256,7 +257,7 @@ class TocMachine(GraphMachine):
             if r > 0:
                 filterig = filterig.order_by('create_at')
                 keyword = "最新 %s" % keyword
-            r = text.find('推薦'):
+            r = text.find('推薦')
             if r > 0:
                 filterig = filterig.order_by('likes')
                 keyword = "最新 %s" % keyword
@@ -265,9 +266,9 @@ class TocMachine(GraphMachine):
             if list_len > 10:
                 end = 10 
             end = list_len
-            self.set_current_query(list_len,start,end)
-            keyword = "關鍵字: %s | %d筆\n 顯示 %d ~ %d 筆正妹" % (keyword, list_len， start + 1, end)
-            ig_to_show = filterig[start:end]
+            # self.set_current_query(list_len,start,end, filterig)
+            # keyword = "關鍵字: %s | %d筆\n 顯示 %d ~ %d 筆正妹" % (keyword, list_len， start + 1, end)
+            # ig_to_show = filterig[start:end]
             api.profileTemplates(ig_to_show)
             api.text_message(keyword)
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
