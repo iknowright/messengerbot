@@ -266,9 +266,9 @@ class TocMachine(GraphMachine):
             if list_len > 10:
                 end = 10 
             end = list_len
-            # self.set_current_query(list_len,start,end, filterig)
-            # keyword = "關鍵字: %s | %d筆\n 顯示 %d ~ %d 筆正妹" % (keyword, list_len， start + 1, end)
-            # ig_to_show = filterig[start:end]
+            self.set_current_query(list_len,start,end, filterig)
+            keyword = "關鍵字: %s | %d筆\n 顯示 %d ~ %d 筆正妹" % (keyword, list_len， start + 1, end)
+            ig_to_show = filterig[start:end]
             api.profileTemplates(ig_to_show)
             api.text_message(keyword)
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
