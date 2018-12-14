@@ -268,7 +268,7 @@ class TocMachine(GraphMachine):
             end = list_len
             keyword = "關鍵字: %s | %d筆\n 顯示 %d ~ %d 筆正妹" % (keyword, list_len, start + 1, end)
             ig_to_show = filterig[start:end]
-            ig_rest = filter[end:]
+            ig_rest = filterig[end:]
             self.set_current_query(list_len,start,end, ig_rest)
             api.profileTemplates(ig_to_show)
             api.text_message(keyword)
