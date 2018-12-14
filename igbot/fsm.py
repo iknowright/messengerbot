@@ -217,14 +217,14 @@ class TocMachine(GraphMachine):
             print("hi")
             for item in query_ig:
                 list_name = "%s%s\n" % (list_name, item.id)
-            api.text_message(keyword + list_name)
+            api.text_message(keyword + '\n' + list_name)
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
         elif text == "postback_find":
             self.set_current_query(0,None)
             api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])
         elif text == "postback_more":
             list_start, query_ig = self.get_current_query()
-            new_len = len(filterig)
+            new_len = len(query_ig)
             has_next = False
             end = new_len
             if new_len > 10:
