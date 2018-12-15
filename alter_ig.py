@@ -15,8 +15,8 @@ for entry in entries:
     # clean up the emoji change it to rectangle, since emoji not supported
     bio = re.sub(r'\\u([d][a-z|A-Z|0-9]{3})\\u([d][a-z|A-Z|0-9]{3})', u"\u26F6", bio)
     # get remaining unicode
-    unicodes = re.findall(r'\\u([^d][a-z|A-Z|0-9]{3})', x)
-    normal = re.findall(r'\\[^u]', x)
+    unicodes = re.findall(r'\\u([^d][a-z|A-Z|0-9]{3})', bio)
+    normal = re.findall(r'\\[^u]', bio)
     # use magic library to fix
     import ast
     s = x
