@@ -152,16 +152,9 @@ class TocMachine(GraphMachine):
         api = MessageAPI(sender_id)
         print("------------")
         print("im at on_enter_printinstadp")
-        textlist = text.split(' ')
-        if textlist[0] == 'payload_like':
-            liked_entry = Instagrammer.objects.get(id=textlist[1])
-            liked_entry.likes += 1
-            liked_entry.save()
-            api.text_message("You Liked %s, Now %d Likes"%(textlist[1],liked_entry.likes))
-        else:
-            ig_id, url, bio = self.get_single_url()
-            api.image_message(url)
-            api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
+        ig_id, url, bio = self.get_single_url()
+        api.image_message(url)
+        api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
 
     # instadperror
     def on_enter_instadperror(self, sender_id, text):
@@ -191,7 +184,6 @@ class TocMachine(GraphMachine):
                 image_url = url
             )
             api.text_message("IG上傳成功")
-        entry = Instagrammer.objects.get(id = ig_id)
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
 
@@ -345,12 +337,6 @@ class TocMachine(GraphMachine):
         if len(textlist) >= 4 or len(textlist) == 0:
             api.text_message("格式錯誤請重新再試")
             self.gobackupload(sender_id, text)
-        elif textlist[0] == 'payload_like':
-            liked_entry = Instagrammer.objects.get(id=textlist[1])
-            liked_entry.likes += 1
-            liked_entry.save()
-            api.text_message("You Liked %s, Now %d Likes"%(textlist[1],liked_entry.likes))
-            self.gobackupload(sender_id, text)
         else:
             genre = "無"
             country = "無"
@@ -378,6 +364,5 @@ class TocMachine(GraphMachine):
                     url = "https://www.instagram.com/%s" % textlist[0],
                     image_url = image_url
                 )
-            entry = Instagrammer.objects.get(id = textlist[0])
             api.profileTemplatesSingle(entry)
             self.gobackupload(sender_id, text)
