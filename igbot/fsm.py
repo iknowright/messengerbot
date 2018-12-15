@@ -170,7 +170,7 @@ class TocMachine(GraphMachine):
         print("im at on_enter_printdpserver")
         api = MessageAPI(sender_id)
         ig_id, url, bio = self.get_single_url()
-        entry = Instagrammer.objects.filter(id = ig_id)
+        entry = Instagrammer.objects.get(id = ig_id)
         if entry.exists():
             api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
         else:
@@ -184,7 +184,7 @@ class TocMachine(GraphMachine):
                 image_url = url
             )
             api.text_message("IG上傳成功")
-        entry = Instagrammer.objects.filter(id = ig_id)
+        entry = Instagrammer.objects.get(id = ig_id)
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
 
