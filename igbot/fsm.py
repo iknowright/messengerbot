@@ -170,7 +170,7 @@ class TocMachine(GraphMachine):
         print("im at on_enter_printdpserver")
         api = MessageAPI(sender_id)
         ig_id, url, bio = self.get_single_url()
-        entry = Instagrammer.objects.filter(id = ig_id)[0]
+        entry = Instagrammer.objects.filter(id = ig_id)
         if entry.exists():
             api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
         else:
@@ -347,7 +347,7 @@ class TocMachine(GraphMachine):
                 country = textlist[2]
             elif len(textlist) == 2:
                 genre = textlist[1]
-            entry = Instagrammer.objects.filter(id = textlist[0])[0]
+            entry = Instagrammer.objects.filter(id = textlist[0])
             if entry.exists():
                 api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名哦～")
                 entry.country = country
