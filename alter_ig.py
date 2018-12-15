@@ -19,7 +19,7 @@ for entry in entries:
     normal = re.findall(r'\\[^u]', bio)
     # use magic library to fix
     import ast
-    s = x
+    s = bio
     for uni in unicodes:
         the_code = (r"u" + uni)
         the_code = u'\\{}'.format(the_code)
