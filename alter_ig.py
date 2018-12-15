@@ -33,12 +33,5 @@ for entry in entries:
     for norm in normal:
         thecode_bis = ast.literal_eval(u'u"'+ norm + '"')
         ss = ss.replace(norm, thecode_bis)
-    print("processing %s"%textlist[0])
-    Instagrammer.objects.create(
-        id = textlist[0],
-        genre = textlist[1],
-        country = textlist[2],
-        content = ss,
-        url = "https://www.instagram.com/%s" % textlist[0],
-        image_url = image_url
-    )
+    entry.content = ss
+    entry.save()
