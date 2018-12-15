@@ -10,11 +10,7 @@ from igbot.models import Instagrammer
 
 entries = Instagrammer.objects.all()
 for entry in entries: 
-    # parsing each column of a row 
-    textlist = entry.split(',')
-    print (entry)
-    image_url, bio = getImageUrl(textlist[0])
-    # we know bio is wrong , now fix it 
+    bio = entries.bio
 
     # clean up the emoji change it to rectangle, since emoji not supported
     bio = re.sub(r'\\u([d][a-z|A-Z|0-9]{3})\\u([d][a-z|A-Z|0-9]{3})', u"\u26F6", bio)
