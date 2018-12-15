@@ -9,6 +9,30 @@ import operator
 singleIgUrl = ""
 post_url = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=%s" % ACCESS_TOKEN
 
+def process_bio(bio):
+    # clean up the emoji change it to rectangle, since emoji not supported
+    bio = re.sub(r'\\u([d][a-z|A-Z|0-9]{3})\\u([d][a-z|A-Z|0-9]{3})', u"\u26F6", bio)
+    # get remaining unicode
+    unicodes = re.findall(r'\\u([^d][a-z|A-Z|0-9]{3})', bio)
+    normal = re.findall(r'\\[^u]', bio)
+    # use magic library to fix
+    import ast
+    s = bio
+    for uni in unicodes:
+        the_code = (r"u" + uni)
+        the_code = u'\\{}'.format(the_code)
+        print(the_code)
+        # magic here
+        thecode_bis = ast.literal_eval(u'u"'+ the_code + '"')
+        print(thecode_bis)
+        # replace the unicode with correct character
+        s = s.replace(the_code, thecode_bis)
+    ss = s
+    for norm in normal:
+        thecode_bis = ast.literal_eval(u'u"'+ norm + '"')
+        ss = ss.replace(norm, thecode_bis)
+    return ss
+
 class TocMachine(GraphMachine):
 
     def __init__(self, **machine_configs):
@@ -157,6 +181,7 @@ class TocMachine(GraphMachine):
         if entry.exists():
             api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
         else:
+            bio = process_bio(bio)
             Instagrammer.objects.create(
                 id = ig_id,
                 genre = "",
@@ -344,6 +369,7 @@ class TocMachine(GraphMachine):
                 entry.save()
             else:
                 image_url, bio = getImageUrl(textlist[0])
+                bio = process_bio(bio)
                 Instagrammer.objects.create(
                     id = textlist[0],
                     genre = genre,
