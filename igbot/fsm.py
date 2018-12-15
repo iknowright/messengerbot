@@ -349,7 +349,6 @@ class TocMachine(GraphMachine):
                 genre = textlist[1]
             entry = Instagrammer.objects.get(id = textlist[0])[0]
             if entry.exists():
-                entry = Instagrammer.objects.(id = textlist[0])
                 api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名哦～")
                 entry.country = country
                 entry.genre = genre
