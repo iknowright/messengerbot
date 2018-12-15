@@ -350,9 +350,9 @@ class TocMachine(GraphMachine):
             entry = Instagrammer.objects.filter(id = textlist[0])
             if entry.exists():
                 api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名哦～")
-                entry.country = country
-                entry.genre = genre
-                entry.save()
+                entry[0].country = country
+                entry[0].genre = genre
+                entry[0].save()
             else:
                 image_url, bio = getImageUrl(textlist[0])
                 bio = process_bio(bio)
