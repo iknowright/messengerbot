@@ -85,4 +85,40 @@ messages = {
             "payload":"我要看臺灣模特兒正妹"
         },
     ],
+    "view_option_button":[
+        {
+            "type":"postback",
+            "title":"往下看",
+            "payload":"postback_more"
+        },
+        {
+            "type":"postback",
+            "title":"返回搜尋",
+            "payload":"postback_find"
+        },
+    ],
+    "view_option_button_advance":[
+        {
+            "type":"postback",
+            "title":"往下看",
+            "payload":"postback_more"
+        },
+        {
+            "type":"postback",
+            "title":"返回搜尋",
+            "payload":"postback_find"
+        },
+        {
+            "type":"postback",
+            "title":"顯示清單",
+            "payload":"postback_list_only"
+        },
+    ],
+    "view_option_button_return_only":[
+        {
+            "type":"postback",
+            "title":"返回搜尋",
+            "payload":"postback_find"
+        },
+    ],
 }
