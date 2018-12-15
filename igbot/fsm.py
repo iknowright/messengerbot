@@ -184,6 +184,7 @@ class TocMachine(GraphMachine):
                 image_url = url
             )
             api.text_message("IG上傳成功")
+        entry = Instagrammer.objects.filter(id = ig_id)
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
 
@@ -364,5 +365,6 @@ class TocMachine(GraphMachine):
                     url = "https://www.instagram.com/%s" % textlist[0],
                     image_url = image_url
                 )
+            entry = Instagrammer.objects.filter(id = textlist[0])
             api.profileTemplatesSingle(entry)
             self.gobackupload(sender_id, text)
