@@ -236,7 +236,7 @@ class TocMachine(GraphMachine):
             api.text_message("You Liked %s, Now %dLikes "%(textlist[1],liked_entry.likes))            
         elif text == "postback_list_only":
             list_start, query_ig = self.get_current_query()
-            keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + 10)
+            keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + len(query_ig))
             list_name = ""
             print("hi")
             for item in query_ig:
@@ -309,7 +309,7 @@ class TocMachine(GraphMachine):
                     keyword = "%s %s" % (country_taken, genre_taken)
             r = text.find('最新')
             if r > 0:
-                filterig = filterig.order_by('create_at')
+                filterig = filterig.order_by('-create_at')
                 keyword = "最新 %s" % keyword
             r = text.find('推薦')
             if r > 0:
