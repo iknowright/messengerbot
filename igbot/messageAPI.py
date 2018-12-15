@@ -130,11 +130,6 @@ class MessageAPI:
                         "url":ig.url,
                         "title":"View Website",
                     },
-                    {
-                        "type": "postback",
-                        "title": "Like",
-                        "payload": "payload_like %s"%ig.id,
-                    },
                 ]      
             }
         ]

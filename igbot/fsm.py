@@ -9,6 +9,30 @@ import operator
 singleIgUrl = ""
 post_url = "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=%s" % ACCESS_TOKEN
 
+def process_bio(bio):
+    # clean up the emoji change it to rectangle, since emoji not supported
+    bio = re.sub(r'\\u([d][a-z|A-Z|0-9]{3})\\u([d][a-z|A-Z|0-9]{3})', u"\u26F6", bio)
+    # get remaining unicode
+    unicodes = re.findall(r'\\u([^d][a-z|A-Z|0-9]{3})', bio)
+    normal = re.findall(r'\\[^u]', bio)
+    # use magic library to fix
+    import ast
+    s = bio
+    for uni in unicodes:
+        the_code = (r"u" + uni)
+        the_code = u'\\{}'.format(the_code)
+        print(the_code)
+        # magic here
+        thecode_bis = ast.literal_eval(u'u"'+ the_code + '"')
+        print(thecode_bis)
+        # replace the unicode with correct character
+        s = s.replace(the_code, thecode_bis)
+    ss = s
+    for norm in normal:
+        thecode_bis = ast.literal_eval(u'u"'+ norm + '"')
+        ss = ss.replace(norm, thecode_bis)
+    return ss
+
 class TocMachine(GraphMachine):
 
     def __init__(self, **machine_configs):
@@ -128,16 +152,9 @@ class TocMachine(GraphMachine):
         api = MessageAPI(sender_id)
         print("------------")
         print("im at on_enter_printinstadp")
-        textlist = text.split(' ')
-        if textlist[0] == 'payload_like':
-            liked_entry = Instagrammer.objects.get(id=textlist[1])
-            liked_entry.likes += 1
-            liked_entry.save()
-            api.text_message("You Liked %s, Now %d Likes"%(textlist[1],liked_entry.likes))
-        else:
-            ig_id, url, bio = self.get_single_url()
-            api.image_message(url)
-            api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
+        ig_id, url, bio = self.get_single_url()
+        api.image_message(url)
+        api.button_message("想要貢獻給大衆嗎？\n點擊上傳，將ID分享至伺服器\n點擊再一張，獲取新的一張", messages['printdp_button'])
 
     # instadperror
     def on_enter_instadperror(self, sender_id, text):
@@ -156,8 +173,10 @@ class TocMachine(GraphMachine):
         entry = Instagrammer.objects.filter(id = ig_id)
         if entry.exists():
             api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
+            entry = entry[0]
         else:
-            Instagrammer.objects.create(
+            bio = process_bio(bio)
+            entry = Instagrammer.objects.create(
                 id = ig_id,
                 genre = "",
                 country = "",
@@ -165,8 +184,8 @@ class TocMachine(GraphMachine):
                 url = "https://www.instagram.com/%s" % ig_id,
                 image_url = url
             )
+            entry.save()
             api.text_message("IG上傳成功")
-        entry = Instagrammer.objects.get(id = ig_id)
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
 
@@ -211,7 +230,7 @@ class TocMachine(GraphMachine):
             api.text_message("You Liked %s, Now %dLikes "%(textlist[1],liked_entry.likes))            
         elif text == "postback_list_only":
             list_start, query_ig = self.get_current_query()
-            keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + 10)
+            keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + len(query_ig))
             list_name = ""
             print("hi")
             for item in query_ig:
@@ -284,7 +303,7 @@ class TocMachine(GraphMachine):
                     keyword = "%s %s" % (country_taken, genre_taken)
             r = text.find('最新')
             if r > 0:
-                filterig = filterig.order_by('create_at')
+                filterig = filterig.order_by('-create_at')
                 keyword = "最新 %s" % keyword
             r = text.find('推薦')
             if r > 0:
@@ -320,12 +339,6 @@ class TocMachine(GraphMachine):
         if len(textlist) >= 4 or len(textlist) == 0:
             api.text_message("格式錯誤請重新再試")
             self.gobackupload(sender_id, text)
-        elif textlist[0] == 'payload_like':
-            liked_entry = Instagrammer.objects.get(id=textlist[1])
-            liked_entry.likes += 1
-            liked_entry.save()
-            api.text_message("You Liked %s, Now %d Likes"%(textlist[1],liked_entry.likes))
-            self.gobackupload(sender_id, text)
         else:
             genre = "無"
             country = "無"
@@ -337,14 +350,15 @@ class TocMachine(GraphMachine):
                 genre = textlist[1]
             entry = Instagrammer.objects.filter(id = textlist[0])
             if entry.exists():
-                entry = Instagrammer.objects.get(id = textlist[0])
                 api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名哦～")
-                entry.country = country
-                entry.genre = genre
-                entry.save()
+                entry[0].country = country
+                entry[0].genre = genre
+                entry[0].save()
+                entry = entry[0]
             else:
                 image_url, bio = getImageUrl(textlist[0])
-                Instagrammer.objects.create(
+                bio = process_bio(bio)
+                entry = Instagrammer.objects.create(
                     id = textlist[0],
                     genre = genre,
                     country = country,
@@ -352,6 +366,6 @@ class TocMachine(GraphMachine):
                     url = "https://www.instagram.com/%s" % textlist[0],
                     image_url = image_url
                 )
-            entry = Instagrammer.objects.get(id = textlist[0])
+                entry.save()
             api.profileTemplatesSingle(entry)
             self.gobackupload(sender_id, text)
