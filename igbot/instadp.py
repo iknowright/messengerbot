@@ -4,4 +4,10 @@ def getImageUrl(instagram_id):
     url = "https://www.instagram.com/{}"
     r = requests.get(url.format(instagram_id))
     html = r.text
-    return re.findall('"profile_pic_url_hd":"(.*?)",', html)[0], re.findall('"biography":"(.*?)",', html)[0]
+    img_url = re.findall('"profile_pic_url_hd":"(.*?)",', html)
+    bio = re.findall('"biography":"(.*?)",', html)
+    if img_url is None:
+        return "", ""
+    else :
+        return img_url[0], bio[0]
+        
