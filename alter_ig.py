@@ -10,7 +10,7 @@ from igbot.models import Instagrammer
 
 entries = Instagrammer.objects.all()
 for entry in entries: 
-    bio = entries.bio
+    bio = entry.bio
 
     # clean up the emoji change it to rectangle, since emoji not supported
     bio = re.sub(r'\\u([d][a-z|A-Z|0-9]{3})\\u([d][a-z|A-Z|0-9]{3})', u"\u26F6", bio)
