@@ -107,7 +107,6 @@ class MessageAPI:
         requests.post(post_url, headers={"Content-Type": "application/json"}, data=request)
 
     def profileTemplatesSingle(self, ig):
-        ig = ig[0]
         title = ig.id
         if not ig.genre or ig.genre != "無":
             title = "%s %s" % (title, ig.genre)
