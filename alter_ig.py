@@ -16,6 +16,7 @@ for entry in entries:
     bio = re.sub(r'\\u([d][a-z|A-Z|0-9]{3})\\u([d][a-z|A-Z|0-9]{3})', u"\u26F6", bio)
     # get remaining unicode
     unicodes = re.findall(r'\\u([^d][a-z|A-Z|0-9]{3})', x)
+    normal = re.findall(r'\\[^u]', x)
     # use magic library to fix
     import ast
     s = x
@@ -28,13 +29,16 @@ for entry in entries:
         print(thecode_bis)
         # replace the unicode with correct character
         s = s.replace(the_code, thecode_bis)
-    
+    ss = s
+    for norm in normal:
+        thecode_bis = ast.literal_eval(u'u"'+ norm + '"')
+        ss = ss.replace(norm, thecode_bis)
     print("processing %s"%textlist[0])
     Instagrammer.objects.create(
         id = textlist[0],
         genre = textlist[1],
         country = textlist[2],
-        content = s,
+        content = ss,
         url = "https://www.instagram.com/%s" % textlist[0],
         image_url = image_url
     )
