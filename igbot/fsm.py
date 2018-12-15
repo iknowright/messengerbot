@@ -347,7 +347,7 @@ class TocMachine(GraphMachine):
                 country = textlist[2]
             elif len(textlist) == 2:
                 genre = textlist[1]
-            entry = Instagrammer.objects.filter(id = textlist[0])
+            entry = Instagrammer.objects.get(id = textlist[0])
             if entry.exists():
                 entry = Instagrammer.objects.get(id = textlist[0])
                 api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名哦～")
@@ -365,6 +365,6 @@ class TocMachine(GraphMachine):
                     url = "https://www.instagram.com/%s" % textlist[0],
                     image_url = image_url
                 )
-            entry = Instagrammer.objects.filter(id = textlist[0])
+            entry = Instagrammer.objects.get(id = textlist[0])
             api.profileTemplatesSingle(entry)
             self.gobackupload(sender_id, text)
