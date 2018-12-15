@@ -8,7 +8,7 @@ django.setup()
 
 from igbot.models import Instagrammer
 
-
+# entry may defer
 entries = [
     "andy_blossom,模特兒,臺灣",
     "mengj215,模特兒,臺灣",
@@ -29,6 +29,7 @@ entries = [
     "mayj517,模特兒,韓國    ",
     "berlin.ng,模特兒,新加坡",
 ]
+
 for entry in entries: 
     # parsing each column of a row 
     textlist = entry.split(',')

@@ -208,8 +208,7 @@ class TocMachine(GraphMachine):
             liked_entry = Instagrammer.objects.get(id=textlist[1])
             liked_entry.likes += 1
             liked_entry.save()
-            api.text_message("You Liked %s, Now %dLikes "%(textlist[1],liked_entry.likes))
-            api.quickreply_button_message("範例 \"我要看馬來西亞正妹\" \"我要看最新空姐正妹\" \"我要看臺灣模特兒正妹\"", messages['viewig_quickreply'],messages['returnlobby_button'])            
+            api.text_message("You Liked %s, Now %dLikes "%(textlist[1],liked_entry.likes))            
         elif text == "postback_list_only":
             list_start, query_ig = self.get_current_query()
             keyword = "顯示 %d ~ %d 筆正妹" % (list_start + 1, list_start + 10)
