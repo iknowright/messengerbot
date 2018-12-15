@@ -170,12 +170,12 @@ class TocMachine(GraphMachine):
         print("im at on_enter_printdpserver")
         api = MessageAPI(sender_id)
         ig_id, url, bio = self.get_single_url()
-        entry = Instagrammer.objects.get(id = ig_id)
+        entry = Instagrammer.objects.get(id = ig_id)[0]
         if entry.exists():
             api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名～")
         else:
             bio = process_bio(bio)
-            Instagrammer.objects.create(
+            entry = Instagrammer.objects.create(
                 id = ig_id,
                 genre = "",
                 country = "",
@@ -183,8 +183,8 @@ class TocMachine(GraphMachine):
                 url = "https://www.instagram.com/%s" % ig_id,
                 image_url = url
             )
+            entry.save()
             api.text_message("IG上傳成功")
-        entry = Instagrammer.objects.get(id = ig_id)
         api.profileTemplatesSingle(entry)
         self.gobackinput(sender_id, text)
 
@@ -347,9 +347,9 @@ class TocMachine(GraphMachine):
                 country = textlist[2]
             elif len(textlist) == 2:
                 genre = textlist[1]
-            entry = Instagrammer.objects.get(id = textlist[0])
+            entry = Instagrammer.objects.get(id = textlist[0])[0]
             if entry.exists():
-                entry = Instagrammer.objects.get(id = textlist[0])
+                entry = Instagrammer.objects.(id = textlist[0])
                 api.text_message("資料已經在資料庫了，棒棒的，看來妹子很有名哦～")
                 entry.country = country
                 entry.genre = genre
@@ -357,7 +357,7 @@ class TocMachine(GraphMachine):
             else:
                 image_url, bio = getImageUrl(textlist[0])
                 bio = process_bio(bio)
-                Instagrammer.objects.create(
+                entry = Instagrammer.objects.create(
                     id = textlist[0],
                     genre = genre,
                     country = country,
@@ -365,6 +365,6 @@ class TocMachine(GraphMachine):
                     url = "https://www.instagram.com/%s" % textlist[0],
                     image_url = image_url
                 )
-            entry = Instagrammer.objects.get(id = textlist[0])
+                entry.save()
             api.profileTemplatesSingle(entry)
             self.gobackupload(sender_id, text)
