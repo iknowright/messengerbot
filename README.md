@@ -3,6 +3,9 @@
 ### 前言：
 自己跟一些朋友有這跟別人不一樣的 Messenger Group， 你知道的... 就是會互相分享一些照片或者 Instagram 的 Profile。事實上，要爬 IG 並不是一件很簡單的事情，我們男人也不是 Instagram Explore 隨意幾個美女就可以滿足的，所以我突發奇想，做一個能整合這些網美們的 IG，供大家欣賞。
 
+### Youtube Demo
+{%youtube 4LbJeQimr9A %}
+
 # 網美IG
 ## Demo
 
@@ -12,6 +15,12 @@
 ![](https://i.imgur.com/r6s0VyK.jpg)
 ![](https://i.imgur.com/L4pAk0C.jpg)
 ![](https://i.imgur.com/rUx3tcb.jpg)
+
+### Demo更新(12/11後)
+![](https://i.imgur.com/il2RY2W.jpg)
+![](https://i.imgur.com/VPIKziW.jpg)
+![](https://i.imgur.com/S7F7sTw.jpg)
+
 
 ## 功能
 
@@ -119,24 +128,25 @@
     Create Date 可以讓資料可以 Order_By (Django Queryset)
     人氣也可以排序
     
-- **小型 Instagram Api**
-    說穿了就是去搜 ig 的使用者資料 (publically)
-    實現方式 : 
-    普通的ig id 應該是 "cabc_123" 之類的
-    但是向 `instagram.com/id` 做 Get request可以爬到另一個id
-    例如我得臉書叫：張財實，但是爬完資料 我得 id 是：123521000215 (unique)
-    後來再用這個id去 
+- **~~小型 Instagram Api~~**
+    ~~說穿了就是去搜 ig 的使用者資料 (publically)~~
+    ~~實現方式~~ : 
+    ~~普通的ig id 應該是 "cabc_123" 之類的~~
+    ~~但是向~~ `instagram.com/id` ~~做 Get request可以爬到另一個id~~
+    ~~例如我得臉書叫：張財實，但是爬完資料 我得 id 是：123521000215 (unique)
+    後來再用這個id去~~ 
     ```
     url="https://i.instagram.com/api/v1/users/{id}/info/"
     r = requests.get(url.format(userID))
     ```
-    request的使用者資料裏就有一個key是使用者的大頭照！！我是這樣抓照片下來的
+    ~~request的使用者資料裏就有一個key是使用者的大頭照！！我是這樣抓照片下來的~~
     
-- **IMGUR API**
-    因爲處理好的照片沒辦法放Local,其實我也不想，加上之前知道hackmd丟照片自動轉成imgur的照片來serve。
-    所以我想要讓收好的照片以Url的方式呈現（方便DB管理，直接給FB用）
-    `n = requests.post("https://api.imgur.com/3/image", headers={"Authorization": "Bearer %s" % IMGUR_ACESS_TOKEN}, data={"image":r.content})`
-    照片：
+- **~~IMGUR API~~**
+    ~~因爲處理好的照片沒辦法放Local,其實我也不想，加上之前知道hackmd丟照片自動轉成imgur的照片來serve。
+    所以我想要讓收好的照片以Url的方式呈現（方便DB管理，直接給FB用）~~
+    ```
+    n = requests.post("https://api.imgur.com/3/image", headers={"Authorization": "Bearer %s" % IMGUR_ACESS_TOKEN}, data={"image":r.content})
+    ```
     
 - **Multiple User**
     知道一個user一個machine的原理 其實這樣實現multiple user 就可以了
@@ -161,3 +171,50 @@
     單筆更改資料就很好用了 支援 GET POST PUT DELETE
     ![](https://i.imgur.com/6SGAIyv.png)
 
+
+# 更新大異動
+
+## 新增
+- 之前只是支援 看正妹 一次十張template,現在延伸兩種擴展方式 1.往下看十張 2.把剩下的list展開用text表示instagrammer
+
+## 刪除
+其實照片不用再轉imgur serve了
+
+## 修正 Instagram 問題
+![](https://i.imgur.com/3QVckBX.png)
+
+真的向學長講的一樣，Instagram 的 old API 已經關掉了，而且是在很尷尬的時間，現在得instagram api 要獲得business review才可以獲取資訊。
+
+那麼問題來了 照片怎麼辦... 好佳在instagram.com/user_id 還是可以爬出 320x320的照片啊！！ 我也跟畫質妥協了 不然我整個做不出來
+
+**第二個雷**
+我們以網紅 舒森 爲例子， 這個 page 的unicode是正常顯示的，但是 requested html 檔案的 UNICODE ESCAPE 既然回傳的是 String Type,這個不是 encoding的問題，instagram特意把 unicode 用 string很難轉回去....
+![](https://i.imgur.com/NPq7zz1.png)
+下面順便看一下 re.findall 要 crawl的東西
+![](https://i.imgur.com/Mr6jEAr.png)
+感謝 stack overflow 有這麼好的解答 , 用所謂的 ast感覺就 智高一等
+```
+import ast
+    s = bio
+    for uni in unicodes:
+        the_code = (r"u" + uni)
+        the_code = u'\\{}'.format(the_code)
+        print(the_code)
+        # magic here
+        thecode_bis = ast.literal_eval(u'u"'+ the_code + '"')
+        print(thecode_bis)
+        # replace the unicode with correct character
+        s = s.replace(the_code, thecode_bis)
+    ss = s
+    for norm in normal:
+        thecode_bis = ast.literal_eval(u'u"'+ norm + '"')
+        ss = ss.replace(norm, thecode_bis)
+    return ss
+```
+
+# Reviewed And Published
+![](https://i.imgur.com/liF8a2S.png)
+
+**聊天室傳送門**[這裏](m.me/344556672759294)
+
+# END
