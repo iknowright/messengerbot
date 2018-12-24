@@ -141,6 +141,11 @@ machineSet = {
             'dest': 'world',
             'conditions': 'is_hello'
         },
+        {
+            'trigger': 'go_back_lobby',
+            'source': 'world',
+            'dest': 'lobby',
+        },
     ],
     "initial" : 'user',
     "auto_transitions" : False,

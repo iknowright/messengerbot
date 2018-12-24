@@ -118,7 +118,7 @@ class TocMachine(GraphMachine):
         return text != '返回'
 
     def is_hello(self, sender_id, text):       
-        return text != 'hello'
+        return text.lower() == 'hello'
 
     # ----------------States--------------------
 
@@ -127,6 +127,7 @@ class TocMachine(GraphMachine):
         print("im at on_enter_world")
         api = MessageAPI(sender_id)
         api.text_message("world")
+        self.go_back_lobby(sender_id, text)
 
     # Lobby
     def on_enter_lobby(self, sender_id, text):
