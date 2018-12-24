@@ -10,7 +10,8 @@ machineSet = {
         'igviewer',
         'iguploader',
         'viewig',
-        'uploadprocess'
+        'uploadprocess',
+        'world'
     ],
     "transitions" : [
         {
@@ -128,11 +129,17 @@ machineSet = {
             'dest': 'lobby',
             'conditions': 'press_return'
         },
-                {
+        {
             'trigger': 'printdp_next',
             'source': 'printinstadp',
             'dest': 'lobby',
             'conditions': 'press_return'
+        },
+        {
+            'trigger': 'lobby_next',
+            'source': 'lobby',
+            'dest': 'world',
+            'conditions': 'is_hello'
         },
     ],
     "initial" : 'user',

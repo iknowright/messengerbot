@@ -117,7 +117,16 @@ class TocMachine(GraphMachine):
         print("Testing not_return")        
         return text != '返回'
 
+    def is_hello(self, sender_id, text):       
+        return text != 'hello'
+
     # ----------------States--------------------
+
+    # World
+    def on_enter_world(self, sender_id, text):
+        print("im at on_enter_world")
+        api = MessageAPI(sender_id)
+        api.text_message("world")
 
     # Lobby
     def on_enter_lobby(self, sender_id, text):
