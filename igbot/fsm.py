@@ -367,15 +367,18 @@ class TocMachine(GraphMachine):
                 entry = entry[0]
             else:
                 image_url, bio = getImageUrl(textlist[0])
-                bio = process_bio(bio)
-                entry = Instagrammer.objects.create(
-                    id = textlist[0],
-                    genre = genre,
-                    country = country,
-                    content = bio,
-                    url = "https://www.instagram.com/%s" % textlist[0],
-                    image_url = image_url
-                )
-                entry.save()
-            api.profileTemplatesSingle(entry)
+                if image_url == "":
+                    api.text_message("ID錯誤請重新再試")
+                else :
+                    bio = process_bio(bio)
+                    entry = Instagrammer.objects.create(
+                        id = textlist[0],
+                        genre = genre,
+                        country = country,
+                        content = bio,
+                        url = "https://www.instagram.com/%s" % textlist[0],
+                        image_url = image_url
+                    )
+                    entry.save()
+                    api.profileTemplatesSingle(entry)
             self.gobackupload(sender_id, text)
