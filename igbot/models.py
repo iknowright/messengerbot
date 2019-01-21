@@ -22,3 +22,12 @@ class Instagrammer(models.Model):
     likes = models.IntegerField(default=0)
     class Meta:
         db_table = "instagrammer"
+
+class AccessToken(model.Model):
+    short_lived_user_access_token = models.TextField(default="")
+    long_lived_user_access_token = models.TextField(default="")
+    page_access_token = models.TextField(default="")
+    create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "Tokens"
