@@ -10,6 +10,9 @@ import requests
 
 from igbot.messageAPI import MessageAPI
 from igbot.fsm import TocMachine
+
+from igbot.models import Token
+from igbot.serializers import TokenSerializer
 from igbot.models import Instagrammer
 from igbot.serializers import InstagrammerSerializer
 
@@ -109,6 +112,23 @@ class IgBotView(generic.View):
 class InstagrammerViewSet(viewsets.ModelViewSet):
     queryset = Instagrammer.objects.all()
     serializer_class = InstagrammerSerializer
+
+class TokenView(generic.View):
+    def put(self, request, *args, **kwargs):
+        body = json.loads(self.request.body.decode('utf-8'))
+        print(body)
+        if body['short_lived_access_token'] != '':
+            pass
+        if body['long_lived_access_token'] != '':
+            pass
+        if body['page_access_token'] != '':
+            pass
+
+class TokenViewSet(viewsets.ModelViewSet):
+    queryset = Token.objects.all()
+    serializer_class = TokenSerializer
+    pass
+
 
 def login(request):
     return render(request, "login.html")

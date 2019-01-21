@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from igbot.views import IgBotView
+from igbot.views import TokenView
 from django.conf.urls import include, url
 
 from rest_framework.routers import DefaultRouter
@@ -28,6 +29,7 @@ router.register(r'intagrammer', views.InstagrammerViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('callback/', IgBotView.as_view()),
+    url('token/', TokenView.as_view()),
     url(r'^api/',include(router.urls)),
     url(r'^showfsm/$', views.show_fsm),
     url(r'^login/$', views.login),
