@@ -50,10 +50,7 @@ LOGIN
             $.ajax({
                 url: 'https://instagrammer-mes.herokuapp.com/token/',
                 type: 'PUT',
-                data: {
-                    data:response,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
+                data: response,
                 success: function(response) {
                     console.log("success put data")
                 }
