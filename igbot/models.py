@@ -23,7 +23,7 @@ class Instagrammer(models.Model):
     class Meta:
         db_table = "instagrammer"
 
-class AccessToken(models.Model):
+class Token(models.Model):
     short_lived_user_access_token = models.TextField(default="")
     long_lived_user_access_token = models.TextField(default="")
     page_access_token = models.TextField(default="")
