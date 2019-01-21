@@ -111,4 +111,4 @@ class InstagrammerViewSet(viewsets.ModelViewSet):
     serializer_class = InstagrammerSerializer
 
 def login(request):
-    return(request, "login.html")
+    return render(request, "login.html")
