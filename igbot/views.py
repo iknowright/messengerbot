@@ -109,3 +109,6 @@ class IgBotView(generic.View):
 class InstagrammerViewSet(viewsets.ModelViewSet):
     queryset = Instagrammer.objects.all()
     serializer_class = InstagrammerSerializer
+
+def login(request):
+    return(request, "login.html")
