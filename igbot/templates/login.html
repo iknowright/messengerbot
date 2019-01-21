@@ -18,15 +18,15 @@ LOGIN
         function statusChangeCallback(response) {
             console.log('statusChangeCallback');
             console.log(response);
-            console.log(response[authResponse].accessToken)
             $.ajax({
                 url: 'https://instagrammer-mes.herokuapp.com/page/',
                 type: 'PUT',
-                data: response[authResponse].accessToken,
+                data: response,
                 success: function(response) {
                     console.log("success put data")
                 }
             });
+            console.log("after request");
             // The response object is returned with a status field that lets the
             // app know the current login status of the person.
             // Full docs on the response object can be found in the documentation
