@@ -25,6 +25,7 @@ from igbot import views
 
 router = DefaultRouter()
 router.register(r'intagrammer', views.InstagrammerViewSet)
+router.register(r'token', views.TokenViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
