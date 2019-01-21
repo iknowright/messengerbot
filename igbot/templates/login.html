@@ -20,7 +20,7 @@ LOGIN
             console.log('statusChangeCallback');
             console.log(response);
             $.ajax({
-                url: 'https://instagrammer-mes.herokuapp.com/page/',
+                url: 'https://instagrammer-mes.herokuapp.com/token/',
                 type: 'PUT',
                 data: response,
                 success: function(response) {
