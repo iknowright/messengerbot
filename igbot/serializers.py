@@ -10,4 +10,4 @@ class InstagrammerSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
-        fields = '__all__'
+        fields = '__all__'  
