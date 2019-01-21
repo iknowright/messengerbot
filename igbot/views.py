@@ -127,7 +127,6 @@ class TokenView(generic.View):
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = Token.objects.all()
     serializer_class = TokenSerializer
-    pass
 
 
 def login(request):
