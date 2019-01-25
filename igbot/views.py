@@ -22,6 +22,7 @@ from igbot.machine_params import machineSet
 
 import io
 from PIL import Image
+import datetime
 
 post_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=%s' % ACCESS_TOKEN
 
@@ -118,6 +119,7 @@ class TokenView(generic.View):
     def put(self, request, *args, **kwargs):
         tokenList = Token.objects.get(pk=1)
         tokenList.short_lived_user_access_token = self.request.body.decode('utf-8')
+        tokenList.create_at = datetime.datetime.now()
         tokenList.save()
         return HttpResponse()
 
