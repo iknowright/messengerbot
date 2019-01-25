@@ -115,7 +115,7 @@ class InstagrammerViewSet(viewsets.ModelViewSet):
 
 class TokenView(generic.View):
     def put(self, request, *args, **kwargs):
-        print(request.json)
+        print(self.request.json)
         if body['short_lived_access_token'] != '':
             pass
         if body['long_lived_access_token'] != '':
