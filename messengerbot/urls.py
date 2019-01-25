@@ -30,7 +30,7 @@ router.register(r'token', views.TokenViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('callback/', IgBotView.as_view()),
-    url('token/', TokenView.as_view()),
+    url('puttoken/', TokenView.as_view()),
     url(r'^api/',include(router.urls)),
     url(r'^showfsm/$', views.show_fsm),
     url(r'^login/$', views.login),
