@@ -47,9 +47,13 @@ LOGIN
         function statusChangeCallback(response) {
             console.log('statusChangeCallback');
             console.log(response);
+            response = response.authResponse.accessToken;
+            console.log(response);
             $.ajax({
-                url: 'https://instagrammer-mes.herokuapp.com/token/',
+                // url: 'https://instagrammer-mes.herokuapp.com/token/',
+                url: 'https://0fd7c619.ngrok.io/token/',                
                 type: 'PUT',
+                contentType: "application/json; charset=utf-8",
                 data: response,
                 success: function(response) {
                     console.log("success put data")

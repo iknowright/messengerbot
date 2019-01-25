@@ -114,14 +114,16 @@ class InstagrammerViewSet(viewsets.ModelViewSet):
     serializer_class = InstagrammerSerializer
 
 class TokenView(generic.View):
+    # Prevent getting csrf error
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return generic.View.dispatch(self, request, *args, **kwargs)
+
     def put(self, request, *args, **kwargs):
-        print(self.request.json)
-        if body['short_lived_access_token'] != '':
-            pass
-        if body['long_lived_access_token'] != '':
-            pass
-        if body['page_access_token'] != '':
-            pass
+        tokenList = Token.objects.get(pk=1)
+        tokenList.short_lived_user_access_token = self.request.body.decode('utf-8')
+        tokenList.save()
+        return HttpResponse()
 
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = Token.objects.all()
