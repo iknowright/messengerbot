@@ -50,8 +50,8 @@ LOGIN
             response = response.authResponse.accessToken;
             console.log(response);
             $.ajax({
-                url: 'https://instagrammer-mes.herokuapp.com/puttoken/',
-                // url: 'https://0fd7c619.ngrok.io/token/',                
+                // url: 'https://instagrammer-mes.herokuapp.com/puttoken/',
+                url: 'https://91e3b72f.ngrok.io/puttoken/',                
                 type: 'PUT',
                 contentType: "application/json; charset=utf-8",
                 data: response,
