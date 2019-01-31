@@ -125,7 +125,7 @@ class TokenView(generic.View):
             'client_secret': '418463923d26c8c3d24bb4091b13e4c4',
             'fb_exchange_token': self.request.body.decode('utf-8'),
             }
-        r = requests.get("https://graph.facebook.com/oauth/", params=payload)
+        r = requests.get("https://graph.facebook.com/oauth/access_token", params=payload)
         print(r.text)
 
         tokenList.create_at = datetime.datetime.now()
