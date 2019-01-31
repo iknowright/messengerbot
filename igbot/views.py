@@ -127,7 +127,9 @@ class TokenView(generic.View):
             }
         r = requests.get("https://graph.facebook.com/oauth/access_token", params=payload)
         print(r.text)
-
+        r = r.json()
+        long_live = r['access_token']
+        tokenList.long_lived_user_access_token = long_live
         tokenList.create_at = datetime.datetime.now()
         tokenList.save()
         return HttpResponse()
