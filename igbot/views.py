@@ -121,8 +121,8 @@ class TokenView(generic.View):
         tokenList = Token.objects.get(pk=1)
         tokenList.short_lived_user_access_token = self.request.body.decode('utf-8')
         payload = {'grant_type': 'fb_exchange_token',
-            'client_id': '548789575565635',
-            'client_secret': '418463923d26c8c3d24bb4091b13e4c4',
+            'client_id': CLIENT_ID,
+            'client_secret': CLIENT_SECRET,
             'fb_exchange_token': self.request.body.decode('utf-8'),
             }
         r = requests.get("https://graph.facebook.com/oauth/access_token", params=payload)
